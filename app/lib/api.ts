@@ -5,6 +5,7 @@ export async function apiFetch(
   options: RequestInit = {}
 ) {
   const token = localStorage.getItem("token")
+
   const authorization = token
     ? token.startsWith("Bearer ")
       ? token
@@ -23,6 +24,7 @@ export async function apiFetch(
     ...options,
     headers,
   })
+
   const raw = await res.text()
   const contentType = res.headers.get("content-type") || ""
   const isJson = contentType.includes("application/json")
@@ -32,9 +34,12 @@ export async function apiFetch(
   if (!res.ok) {
     const message =
       (isJson && typeof data === "object" && data
-        ? ((data as Record<string, unknown>).message ??
-          (data as Record<string, unknown>).error)
-        : null) || `Request error (${res.status})`
+        ? (
+            (data as Record<string, unknown>).mensagem ?? // ✅ prioridade pt-br
+            (data as Record<string, unknown>).message ??
+            (data as Record<string, unknown>).error
+          )
+        : null) || `Erro na requisição (${res.status})`
 
     throw new Error(String(message))
   }

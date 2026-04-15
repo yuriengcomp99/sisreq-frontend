@@ -42,8 +42,7 @@ export default function LoginPage() {
 
       await Swal.fire({
         icon: "success",
-        title: "Login successful",
-        text: "Welcome back!",
+        title: response.mensagem,
         timer: 1500,
         showConfirmButton: false,
       })
@@ -53,8 +52,7 @@ export default function LoginPage() {
     } catch (err: any) {
       await Swal.fire({
         icon: "error",
-        title: "Login failed",
-        text: err.message || "Invalid credentials",
+        title: err.message,
       })
     }
   }
