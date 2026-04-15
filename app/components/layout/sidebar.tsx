@@ -47,6 +47,11 @@ export default function Sidebar() {
           Profile
         </Link>
 
+        <Link href="/pregoes" className={getLinkClass("/pregoes")}>
+          <FiUser size={18} />
+          Pregões
+        </Link>
+
         <span className="text-xs font-semibold text-gray-400 mt-4 mb-1 px-2 uppercase tracking-wider">
           Admin
         </span>

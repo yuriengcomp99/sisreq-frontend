@@ -8,8 +8,8 @@ const interSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Auth FullStack",
-  description: "Auth FullStack",
+  title: "SISREQ - Sistema de Requisições",
+  description: "SISREQ - Sistema de Requisições",
 };
 
 export default function RootLayout({

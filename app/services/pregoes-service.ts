@@ -6,6 +6,16 @@ export interface ApiResponse<T> {
   dados: T
 }
 
+export interface Pregao {
+  pregao: string
+  objeto: string
+  ugg: string
+  tipoUasg: string
+  inicioVigAta: string
+  fimVigAta: string
+  qtdItensDisponiveis: number
+}
+
 export async function importPregoes(file: File) {
   const formData = new FormData()
 
@@ -14,5 +24,11 @@ export async function importPregoes(file: File) {
   return apiFetch<ApiResponse<null>>("/pregoes/import", {
     method: "POST",
     body: formData,
+  })
+}
+
+export async function getPregoes() {
+  return apiFetch<ApiResponse<Pregao[]>>("/pregoes", {
+    method: "GET",
   })
 }
