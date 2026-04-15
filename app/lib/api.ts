@@ -5,11 +5,16 @@ export async function apiFetch(
   options: RequestInit = {}
 ) {
   const token = localStorage.getItem("token")
+  const authorization = token
+    ? token.startsWith("Bearer ")
+      ? token
+      : `Bearer ${token}`
+    : null
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    ...(token && {
-      Authorization: `Bearer ${token}`,
+    ...(authorization && {
+      Authorization: authorization,
     }),
     ...options.headers,
   }
@@ -18,11 +23,20 @@ export async function apiFetch(
     ...options,
     headers,
   })
+  const raw = await res.text()
+  const contentType = res.headers.get("content-type") || ""
+  const isJson = contentType.includes("application/json")
 
-  const data = await res.json()
+  const data = isJson && raw ? JSON.parse(raw) : raw
 
   if (!res.ok) {
-    throw new Error(data.error || "Request error")
+    const message =
+      (isJson && typeof data === "object" && data
+        ? ((data as Record<string, unknown>).message ??
+          (data as Record<string, unknown>).error)
+        : null) || `Request error (${res.status})`
+
+    throw new Error(String(message))
   }
 
   return data

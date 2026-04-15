@@ -32,8 +32,13 @@ export default function LoginPage() {
   async function onSubmit(data: FormData) {
     try {
       const response = await login(data)
+      const token = response.dados.accessToken
 
-      localStorage.setItem("token", response.accessToken)
+      if (!token || typeof token !== "string") {
+        throw new Error("Token not found in login response")
+      }
+
+      localStorage.setItem("token", token.replace(/^Bearer\s+/i, ""))
 
       await Swal.fire({
         icon: "success",
