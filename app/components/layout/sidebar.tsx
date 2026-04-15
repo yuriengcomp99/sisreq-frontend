@@ -61,7 +61,7 @@ export default function Sidebar() {
           Cadastrar Setor
         </Link>
 
-        <Link href="/profile/update" className={getLinkClass("/profile/update")}>
+        <Link href="/update" className={getLinkClass("/update")}>
           <FiEdit size={18} />
           Atualizar Dados
         </Link>

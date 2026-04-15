@@ -6,6 +6,8 @@ export async function apiFetch(
 ) {
   const token = localStorage.getItem("token")
 
+  const isFormData = options.body instanceof FormData
+
   const authorization = token
     ? token.startsWith("Bearer ")
       ? token
@@ -13,7 +15,7 @@ export async function apiFetch(
     : null
 
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...(authorization && {
       Authorization: authorization,
     }),
@@ -35,7 +37,7 @@ export async function apiFetch(
     const message =
       (isJson && typeof data === "object" && data
         ? (
-            (data as Record<string, unknown>).mensagem ?? // ✅ prioridade pt-br
+            (data as Record<string, unknown>).mensagem ??
             (data as Record<string, unknown>).message ??
             (data as Record<string, unknown>).error
           )
