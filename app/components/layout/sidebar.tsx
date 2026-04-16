@@ -12,10 +12,9 @@ export default function Sidebar() {
 
     return `
       flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold transition
-      ${
-        isActive
-          ? "bg-custom-blue text-white"
-          : "text-gray-text hover:bg-gray-100"
+      ${isActive
+        ? "bg-custom-blue text-white"
+        : "text-gray-text hover:bg-gray-100"
       }
     `
   }
@@ -26,8 +25,19 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 shadow-[4px_0_10px_rgba(0,0,0,0.05)] p-4 flex flex-col">
-      
+    <div className="
+      w-64 
+      h-screen 
+      bg-white 
+      border-r 
+      border-gray-200 
+      shadow-[4px_0_10px_rgba(0,0,0,0.05)] 
+      p-4 
+      flex 
+      flex-col
+      sticky top-0
+    ">
+
       <h2 className="text-xl font-semibold mb-2 text-black text-center">
         1º Ten - Cavalcanti
       </h2>
