@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText, Tag, FilePlus, Eye } from "lucide-react"
+import { FileText, Tag, Calendar, Package, Building2, FilePlus, Eye  } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getPregoes } from "@/app/services/pregoes-service"
 import { Button } from "@/app/components/ui/button"
@@ -98,79 +98,89 @@ export default function PregoesPage() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Lista de Pregões</h1>
-
+  
       {pregoes.map((pregao, index) => (
         <div
           key={index}
-          className="bg-white p-5 rounded-xl border border-gray-200 flex flex-col gap-4"
+          className="
+            bg-white 
+            rounded-xl 
+            border border-zinc-200 
+            p-5 
+            flex 
+            justify-between 
+            gap-6
+            hover:shadow-md hover:border-zinc-300
+            transition
+          "
         >
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="flex items-center gap-1 px-3 py-1 rounded-lg border border-custom-blue text-custom-blue text-sm font-semibold">
-              <FileText size={14} />
-              {pregao.pregao}
-            </span>
-
-            <span className="flex items-center gap-1 px-3 py-1 rounded-lg border border-custom-blue text-custom-blue text-sm font-semibold">
-              <Tag size={14} />
-              {pregao.tipoUasg}
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-custom-blue">
-              Objeto
-            </span>
-            <p className="text-sm text-gray-text">
+  
+          <div className="flex flex-col gap-3 flex-1">
+  
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1 px-3 py-1 text-xs rounded-md bg-blue-50 text-blue-600 font-medium">
+                <FileText size={14} />
+                {pregao.pregao}
+              </span>
+  
+              <span className="flex items-center gap-1 px-3 py-1 text-xs rounded-md bg-zinc-100 text-zinc-600">
+                <Tag size={14} />
+                {pregao.tipoUasg}
+              </span>
+            </div>
+  
+            <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed">
               {pregao.objeto}
-              Registro de preços para futura aquisição de materiais de limpeza e conservação para manutenção das instalações da unidade, incluindo detergentes, ceras, desinfetantes e insumos diversos.
             </p>
-          </div>
 
-          <div className="flex flex-wrap justify-between gap-4 items-end">
-
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold text-custom-blue">
-                Início vigência
-              </span>
-              <span className="text-sm text-gray-text">
-                {formatDate(pregao.inicioVigAta)}
-              </span>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold text-custom-blue">
-                Fim vigência
-              </span>
-              <span className="text-sm text-gray-text">
-                {formatDate(pregao.fimVigAta)}
-              </span>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold text-custom-blue">
-                Itens disponíveis
-              </span>
-              <span className="text-sm text-gray-text">
-                {pregao.qtdItensDisponiveis}
-              </span>
-            </div>
-
-            <div className="flex items-end gap-3">
-
-              <div className="flex flex-col items-end">
-                <span className="text-xs font-semibold text-custom-blue">
-                  UGG
-                </span>
-                <span className="text-sm text-gray-text">
-                  {pregao.ugg}
-                </span>
+            <div className="flex flex-wrap gap-6 text-sm text-zinc-500">
+  
+              <div className="flex items-center gap-2">
+                <Calendar size={32} className="text-custom-blue" />
+                <div>
+                  <span className="block text-xs text-zinc-400">Início</span>
+                  {formatDate(pregao.inicioVigAta)}
+                </div>
               </div>
-
-              <Button icon={FilePlus}>
+  
+              <div className="flex items-center gap-2">
+                <Calendar size={32} className="text-custom-blue" />
+                <div>
+                  <span className="block text-xs text-zinc-400">Fim</span>
+                  {formatDate(pregao.fimVigAta)}
+                </div>
+              </div>
+  
+              <div className="flex items-center gap-2">
+                <Package size={32} className="text-custom-blue" />
+                <div>
+                  <span className="block text-xs text-zinc-400">Itens</span>
+                  <span className="font-medium text-blue-600">
+                    {pregao.qtdItensDisponiveis}
+                  </span>
+                </div>
+              </div>
+  
+              <div className="flex items-center gap-2">
+                <Building2 size={32} className="text-custom-blue" />
+                <div>
+                  <span className="block text-xs text-zinc-400">UGG</span>
+                  {pregao.ugg}
+                </div>
+              </div>
+  
+            </div>
+          </div>
+  
+          <div className="flex flex-col justify-between items-end">
+  
+            <div className="flex gap-2">
+              <Button
+                icon={FilePlus}
+              >
                 Gerar Requisição
               </Button>
-
+  
               <Button
                 icon={Eye}
                 onClick={() => {
@@ -181,12 +191,15 @@ export default function PregoesPage() {
                   setOpenModal(true)
                 }}
               >
-                Visualizar Itens
+                Itens
               </Button>
             </div>
+  
           </div>
+  
         </div>
       ))}
+  
       <ItemsModal
         open={openModal}
         onClose={() => setOpenModal(false)}
@@ -194,6 +207,5 @@ export default function PregoesPage() {
         ugg={selectedPregao?.ugg || ""}
       />
     </div>
-
   )
 }
