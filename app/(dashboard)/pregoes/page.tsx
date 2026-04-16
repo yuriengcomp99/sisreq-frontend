@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { getPregoes } from "@/app/services/pregoes-service"
 import { Button } from "@/app/components/ui/button"
 import { formatDate } from "@/app/lib/format"
+import { ItemsModal } from "@/app/(dashboard)/pregoes/components/items-modal"
 
 interface Pregao {
   pregao: string
@@ -19,6 +20,11 @@ interface Pregao {
 export default function PregoesPage() {
   const [pregoes, setPregoes] = useState<Pregao[]>([])
   const [loading, setLoading] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedPregao, setSelectedPregao] = useState<{
+    pregao: string
+    ugg: string
+  } | null>(null)
 
   useEffect(() => {
     async function loadPregoes() {
@@ -56,8 +62,7 @@ export default function PregoesPage() {
               <div className="h-3 w-full bg-gray-200 rounded"></div>
               <div className="h-3 w-3/4 bg-gray-200 rounded"></div>
             </div>
-  
-            {/* INFORMAÇÕES */}
+
             <div className="flex justify-between gap-4">
               <div className="flex flex-col gap-2">
                 <div className="h-3 w-24 bg-gray-200 rounded"></div>
@@ -166,13 +171,29 @@ export default function PregoesPage() {
                 Gerar Requisição
               </Button>
 
-              <Button icon={Eye}>
+              <Button
+                icon={Eye}
+                onClick={() => {
+                  setSelectedPregao({
+                    pregao: pregao.pregao,
+                    ugg: pregao.ugg,
+                  })
+                  setOpenModal(true)
+                }}
+              >
                 Visualizar Itens
               </Button>
             </div>
           </div>
         </div>
       ))}
+      <ItemsModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        pregao={selectedPregao?.pregao || ""}
+        ugg={selectedPregao?.ugg || ""}
+      />
     </div>
+    
   )
 }
