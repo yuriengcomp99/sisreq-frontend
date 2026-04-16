@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/app/components/ui/data-table"
 import { Tooltip } from "@/app/components/ui/tooltip"
+import { formatCurrency } from "@/app/lib/format"
 
 interface Item {
     nrItem: string
@@ -45,7 +46,7 @@ export function ItemsTable({ data }: ItemsTableProps) {
             header: "Fornecedor",
             cell: ({ row }) => {
                 const value = row.getValue("fornecedor") as string
-        
+
                 return (
                     <Tooltip content={value}>
                         <div className="max-w-[150px] truncate text-zinc-600 cursor-pointer">
@@ -64,7 +65,7 @@ export function ItemsTable({ data }: ItemsTableProps) {
 
                 return (
                     <span className="font-semibold text-green-600 whitespace-nowrap">
-                        R$ {value.toFixed(2)}
+                        {formatCurrency(value)}
                     </span>
                 )
             },
@@ -85,7 +86,7 @@ export function ItemsTable({ data }: ItemsTableProps) {
         },
         {
             id: "total",
-            header: "Total",
+            header: "Capacidade Total",
             cell: ({ row }) => {
                 const valor = row.getValue("valorUnitario") as number
                 const saldo = row.getValue("qtdSaldo") as number
@@ -94,7 +95,7 @@ export function ItemsTable({ data }: ItemsTableProps) {
 
                 return (
                     <span className="font-semibold text-purple-600 whitespace-nowrap">
-                        R$ {total.toFixed(2)}
+                        {formatCurrency(total)}
                     </span>
                 )
             },
