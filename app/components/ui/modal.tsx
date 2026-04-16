@@ -33,7 +33,7 @@ export function Modal({ open, onClose, children }: ModalProps) {
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-lg mx-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-xl animate-in fade-in zoom-in-95">
+      <div className="relative z-10 w-full max-w-5xl mx-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-xl animate-in fade-in zoom-in-95">
         
         <div className="max-h-[80vh] overflow-y-auto p-6">
           {children}
@@ -46,7 +46,7 @@ export function Modal({ open, onClose, children }: ModalProps) {
 
 export function ModalHeader({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-4 border-b pb-2">
+    <div className="pb-2">
       <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
         {children}
       </h2>
@@ -64,7 +64,7 @@ export function ModalBody({ children }: { children: ReactNode }) {
 
 export function ModalFooter({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-6 flex justify-end gap-2 border-t pt-4">
+    <div className="mt-2 flex justify-end gap-2 border-t pt-4">
       {children}
     </div>
   )
