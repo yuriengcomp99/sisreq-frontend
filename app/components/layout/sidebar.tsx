@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { FiHome, FiUser, FiLogOut, FiUsers, FiLayers, FiEdit } from "react-icons/fi"
+import { logout } from "@/app/services/auth-service"
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -19,8 +20,8 @@ export default function Sidebar() {
     `
   }
 
-  function handleLogout() {
-    localStorage.removeItem("token")
+  async function handleLogout() {
+    await logout()
     window.location.href = "/login"
   }
 

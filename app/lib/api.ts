@@ -1,31 +1,108 @@
+import {
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+} from "@/app/lib/auth-session"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL
+const AUTH_REFRESH_PATH =
+  process.env.NEXT_PUBLIC_AUTH_REFRESH_PATH ?? "/auth/refresh"
 
-export async function apiFetch(
+const AUTH_PUBLIC_PREFIXES = ["/auth/login", "/auth/register", AUTH_REFRESH_PATH]
+
+function isAuthPublicEndpoint(endpoint: string) {
+  return AUTH_PUBLIC_PREFIXES.some((p) => endpoint.startsWith(p))
+}
+
+function extractAccessTokenFromBody(data: unknown): string | undefined {
+  if (!data || typeof data !== "object") return
+  const root = data as Record<string, unknown>
+  const dados = root.dados
+  if (dados && typeof dados === "object") {
+    const o = dados as Record<string, unknown>
+    const t = o.accessToken ?? o.access_token
+    if (typeof t === "string" && t) return t
+  }
+  const top = root.accessToken ?? root.access_token
+  if (typeof top === "string" && top) return top
+  return
+}
+
+let refreshInFlight: Promise<boolean> | null = null
+
+async function refreshSession(): Promise<boolean> {
+  if (refreshInFlight) return refreshInFlight
+  refreshInFlight = (async () => {
+    try {
+      const res = await fetch(`${API_URL}${AUTH_REFRESH_PATH}`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      })
+      const raw = await res.text()
+      if (!res.ok) return false
+      if (raw) {
+        try {
+          const data = JSON.parse(raw) as unknown
+          const token = extractAccessTokenFromBody(data)
+          if (token) setAccessToken(token)
+        } catch {
+          // resposta sem JSON ou sem accessToken — refresh só renovou cookie
+        }
+      }
+      return true
+    } catch {
+      return false
+    } finally {
+      refreshInFlight = null
+    }
+  })()
+  return refreshInFlight
+}
+
+export type ApiFetchOptions = RequestInit & {
+  skipAuthRefresh?: boolean
+}
+
+export async function apiFetch<T = unknown>(
   endpoint: string,
-  options: RequestInit = {}
-) {
-  const token = localStorage.getItem("token")
+  options: ApiFetchOptions = {}
+): Promise<T> {
+  const { skipAuthRefresh, ...fetchOptions } = options
+  const isFormData = fetchOptions.body instanceof FormData
 
-  const isFormData = options.body instanceof FormData
-
-  const authorization = token
-    ? token.startsWith("Bearer ")
-      ? token
-      : `Bearer ${token}`
-    : null
-
+  const token = getAccessToken()
   const headers: HeadersInit = {
     ...(isFormData ? {} : { "Content-Type": "application/json" }),
-    ...(authorization && {
-      Authorization: authorization,
-    }),
-    ...options.headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...fetchOptions.headers,
   }
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers,
-  })
+  const url = `${API_URL}${endpoint}`
+
+  async function request(): Promise<Response> {
+    return fetch(url, {
+      ...fetchOptions,
+      credentials: fetchOptions.credentials ?? "include",
+      headers,
+    })
+  }
+
+  let res = await request()
+
+  if (
+    res.status === 401 &&
+    !skipAuthRefresh &&
+    !isAuthPublicEndpoint(endpoint) &&
+    !endpoint.startsWith("/auth/logout")
+  ) {
+    const refreshed = await refreshSession()
+    if (refreshed) {
+      res = await request()
+    } else {
+      clearAccessToken()
+    }
+  }
 
   const raw = await res.text()
   const contentType = res.headers.get("content-type") || ""
@@ -46,5 +123,5 @@ export async function apiFetch(
     throw new Error(String(message))
   }
 
-  return data
+  return data as T
 }

@@ -1,4 +1,5 @@
 import { apiFetch } from "@/app/lib/api"
+import { clearAccessToken, setAccessToken } from "@/app/lib/auth-session"
 
 export interface User {
   id: string
@@ -22,18 +23,42 @@ export interface ApiResponse<T> {
 }
 
 export interface LoginResponse extends ApiResponse<{
-  accessToken: string
-  user: User
+  accessToken?: string
+  refreshToken?: string
+  user?: User
 }> {}
 
 export async function login(data: {
   email: string
   password: string
 }): Promise<LoginResponse> {
-  return apiFetch("/auth/login", {
+  const response = await apiFetch<LoginResponse>("/auth/login", {
     method: "POST",
     body: JSON.stringify(data),
   })
+  const dados = response.dados as Record<string, unknown> | undefined
+  const token =
+    dados &&
+    (typeof dados.accessToken === "string"
+      ? dados.accessToken
+      : typeof dados.access_token === "string"
+        ? dados.access_token
+        : undefined)
+  if (token) setAccessToken(token)
+  return response
+}
+
+export async function logout(): Promise<void> {
+  try {
+    await apiFetch("/auth/logout", {
+      method: "POST",
+      skipAuthRefresh: true,
+    })
+  } catch {
+    // noop
+  } finally {
+    clearAccessToken()
+  }
 }
 
 export async function register(data: {
