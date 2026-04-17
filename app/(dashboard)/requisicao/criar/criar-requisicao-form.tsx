@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -81,6 +81,106 @@ function buildDataIso(values: FormValues): string {
   return `${y}-${m}-${d}`
 }
 
+function CriarRequisicaoFormSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <div className="h-8 w-56 rounded-lg bg-gray-200 animate-pulse" />
+        <div className="mt-3 h-4 w-72 max-w-full rounded bg-gray-200 animate-pulse" />
+      </div>
+
+      <div className="grid gap-4 rounded-xl border border-gray-200 bg-white p-6 md:grid-cols-3">
+        {Array.from({ length: 9 }).map((_, index) => (
+          <div
+            key={index}
+            className="flex flex-col gap-2 animate-pulse"
+          >
+            <div className="h-3 w-24 rounded bg-gray-200" />
+            <div className="h-10 w-full rounded-md bg-gray-200" />
+          </div>
+        ))}
+        <div className="md:col-span-3 flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-20 rounded bg-gray-200" />
+          <div className="h-10 w-full rounded-md bg-gray-200" />
+        </div>
+        <div className="md:col-span-3 flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-28 rounded bg-gray-200" />
+          <div className="h-10 w-full rounded-md bg-gray-200" />
+        </div>
+        <div className="md:col-span-3 flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-40 rounded bg-gray-200" />
+          <div className="h-24 w-full rounded-md bg-gray-200" />
+        </div>
+        <div className="md:col-span-3 animate-pulse">
+          <div className="h-3 w-36 rounded bg-gray-200" />
+          <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="flex flex-col gap-2">
+                <div className="h-3 w-12 rounded bg-gray-200" />
+                <div className="h-10 rounded-md bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-28 rounded bg-gray-200" />
+          <div className="h-10 rounded-md bg-gray-200" />
+        </div>
+        <div className="flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-20 rounded bg-gray-200" />
+          <div className="h-10 rounded-md bg-gray-200" />
+        </div>
+        <div className="flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-32 rounded bg-gray-200" />
+          <div className="h-10 rounded-md bg-gray-200" />
+        </div>
+        <div className="md:col-span-3 flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-40 rounded bg-gray-200" />
+          <div className="h-10 w-full rounded-md bg-gray-200" />
+        </div>
+        <div className="md:col-span-3 flex flex-col gap-2 animate-pulse">
+          <div className="h-3 w-28 rounded bg-gray-200" />
+          <div className="h-10 w-full rounded-md bg-gray-200" />
+        </div>
+      </div>
+
+      <section className="flex flex-col gap-4">
+        <div>
+          <div className="h-6 w-52 rounded bg-gray-200 animate-pulse" />
+          <div className="mt-2 h-4 w-full max-w-xl rounded bg-gray-200 animate-pulse" />
+        </div>
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          <div className="grid grid-cols-6 gap-2 border-b border-gray-100 p-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-4 rounded bg-gray-200 animate-pulse"
+              />
+            ))}
+          </div>
+          {Array.from({ length: 5 }).map((_, row) => (
+            <div
+              key={row}
+              className="grid grid-cols-6 gap-2 border-b border-gray-50 p-3 last:border-0"
+            >
+              {Array.from({ length: 6 }).map((_, col) => (
+                <div
+                  key={col}
+                  className="h-8 rounded bg-gray-200 animate-pulse"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="flex justify-end border-t border-zinc-200 pt-4">
+        <div className="h-10 w-44 rounded-md bg-gray-200 animate-pulse" />
+      </div>
+    </div>
+  )
+}
+
 export function CriarRequisicaoForm() {
   const searchParams = useSearchParams()
   const pregao = searchParams.get("pregao")?.trim() ?? ""
@@ -89,11 +189,18 @@ export function CriarRequisicaoForm() {
   const { user, loading: userLoading } = useUser()
   const [itens, setItens] = useState<Item[]>([])
   const [linhasItens, setLinhasItens] = useState<RequisicaoItemLinha[]>([])
-  const [itensLoading, setItensLoading] = useState(false)
+  const [itensLoading, setItensLoading] = useState(true)
+  const [tipoLoading, setTipoLoading] = useState(true)
   const [notasCredito, setNotasCredito] = useState<NotaCredito[]>([])
   const [notasLoading, setNotasLoading] = useState(true)
 
   const paramsOk = Boolean(pregao && ugg)
+
+  useLayoutEffect(() => {
+    if (!paramsOk) return
+    setItensLoading(true)
+    setTipoLoading(true)
+  }, [paramsOk, pregao, ugg])
 
   const {
     register,
@@ -139,7 +246,10 @@ export function CriarRequisicaoForm() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      if (!paramsOk) return
+      if (!paramsOk) {
+        setItensLoading(false)
+        return
+      }
       setItensLoading(true)
       try {
         const itensRes = await getPregaoItens(pregao, ugg)
@@ -165,7 +275,11 @@ export function CriarRequisicaoForm() {
   useEffect(() => {
     let cancelled = false
     async function loadTipo() {
-      if (!paramsOk) return
+      if (!paramsOk) {
+        setTipoLoading(false)
+        return
+      }
+      setTipoLoading(true)
       try {
         const listaRes = await getPregoes()
         if (cancelled) return
@@ -190,6 +304,8 @@ export function CriarRequisicaoForm() {
           title: "Não foi possível carregar o tipo do pregão.",
           text: "Tente recarregar a página.",
         })
+      } finally {
+        if (!cancelled) setTipoLoading(false)
       }
     }
     void loadTipo()
@@ -307,6 +423,16 @@ export function CriarRequisicaoForm() {
         </p>
       </div>
     )
+  }
+
+  const pageLoading =
+    userLoading ||
+    itensLoading ||
+    notasLoading ||
+    tipoLoading
+
+  if (pageLoading) {
+    return <CriarRequisicaoFormSkeleton />
   }
 
   return (
