@@ -26,7 +26,10 @@ export default function Sidebar() {
   const { user, loading } = useUser()
 
   function getLinkClass(path: string) {
-    const isActive = pathname === path
+    const isActive =
+      path === "/requisicao"
+        ? pathname === "/requisicao" || pathname.startsWith("/requisicao/")
+        : pathname === path
 
     return `
       flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold transition
@@ -86,14 +89,19 @@ export default function Sidebar() {
           Pregões
         </Link>
 
-        <Link href="/pregoes" className={getLinkClass("/pregoes")}>
+        <Link href="/capacidade" className={getLinkClass("/capacidade")}>
           <FiUser size={18} />
           Capacidade de Empenho
         </Link>
 
-        <Link href="/pregoes" className={getLinkClass("/pregoes")}>
+        <Link href="/notacredito" className={getLinkClass("/notacredito")}>
           <FiUser size={18} />
           Nota de Crédito
+        </Link>
+
+        <Link href="/requisicao" className={getLinkClass("/requisicao")}>
+          <FiUser size={18} />
+          Requisição
         </Link>
 
         <Link href="/profile" className={getLinkClass("/profile")}>
