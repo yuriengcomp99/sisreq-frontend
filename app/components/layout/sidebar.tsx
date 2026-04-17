@@ -4,9 +4,26 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { FiHome, FiUser, FiLogOut, FiUsers, FiLayers, FiEdit } from "react-icons/fi"
 import { logout } from "@/app/services/auth-service"
+import { useUser, type ProfileUser } from "@/app/contexts/user-context"
+
+function sidebarHeadline(user: ProfileUser | null) {
+  if (!user) return ""
+  const parts = [user.graduation, user.army_name].filter(Boolean)
+  return parts.length ? parts.join(" ") : user.first_name
+}
+
+function sidebarRole(user: ProfileUser | null) {
+  if (!user) return ""
+  return user.designation?.position || user.role || ""
+}
+
+function isAdminRole(user: ProfileUser | null) {
+  return user?.role?.toUpperCase() === "ADMIN"
+}
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { user, loading } = useUser()
 
   function getLinkClass(path: string) {
     const isActive = pathname === path
@@ -39,12 +56,23 @@ export default function Sidebar() {
       sticky top-0
     ">
 
-      <h2 className="text-xl font-semibold mb-2 text-black text-center">
-        1º Ten - Cavalcanti
-      </h2>
-      <p className="text-sm text-center mb-4 text-gray-text">
-        Aprovisionador
-      </p>
+      <div className="mb-4 min-h-[3.5rem] text-center">
+        {loading ? (
+          <>
+            <div className="mx-auto mb-2 h-7 w-44 animate-pulse rounded bg-gray-200" />
+            <div className="mx-auto h-4 w-32 animate-pulse rounded bg-gray-100" />
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-semibold text-black">
+              {sidebarHeadline(user) || "—"}
+            </h2>
+            <p className="text-sm text-gray-text">
+              {sidebarRole(user) || "—"}
+            </p>
+          </>
+        )}
+      </div>
 
       <nav className="flex flex-col gap-2">
 
@@ -63,24 +91,28 @@ export default function Sidebar() {
           Pregões
         </Link>
 
-        <span className="text-xs font-semibold text-gray-400 mt-4 mb-1 px-2 uppercase tracking-wider">
-          Admin
-        </span>
+        {!loading && isAdminRole(user) && (
+          <>
+            <span className="text-xs font-semibold text-gray-400 mt-4 mb-1 px-2 uppercase tracking-wider">
+              Admin
+            </span>
 
-        <Link href="/users/create" className={getLinkClass("/users/create")}>
-          <FiUsers size={18} />
-          Cadastrar Usuários
-        </Link>
+            <Link href="/users/create" className={getLinkClass("/users/create")}>
+              <FiUsers size={18} />
+              Cadastrar Usuários
+            </Link>
 
-        <Link href="/setor/create" className={getLinkClass("/setor/create")}>
-          <FiLayers size={18} />
-          Cadastrar Setor
-        </Link>
+            <Link href="/setor/create" className={getLinkClass("/setor/create")}>
+              <FiLayers size={18} />
+              Cadastrar Setor
+            </Link>
 
-        <Link href="/update" className={getLinkClass("/update")}>
-          <FiEdit size={18} />
-          Atualizar Dados
-        </Link>
+            <Link href="/update" className={getLinkClass("/update")}>
+              <FiEdit size={18} />
+              Atualizar Dados
+            </Link>
+          </>
+        )}
 
       </nav>
 
