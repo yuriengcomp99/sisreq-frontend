@@ -4,6 +4,9 @@ import type { ApiResponse } from "@/app/services/pregoes-service"
 export interface NotaCredito {
   id: string
   numero?: string
+  emitente?: string
+  observacao?: string | null
+  /** fallback legado */
   descricao?: string
 }
 

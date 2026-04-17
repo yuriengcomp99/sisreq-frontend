@@ -11,25 +11,30 @@ export interface RequisicaoItemPayload {
   valor_total: number
 }
 
+/**
+ * Corpo esperado pelo backend (Prisma + CreateRequisicaoUseCase):
+ * `detalhes`, `data_req`, `userId`, `nr_pregao`, `contrato` SIM|NAO.
+ */
 export interface CreateRequisicaoPayload {
-  /** ISO `YYYY-MM-DD` */
-  data: string
+  /** ISO `YYYY-MM-DD` — o use case faz `new Date(data.data_req)` */
+  data_req: string
   numero_diex: string
   nup: string
   de: string
   para: string
   assunto: string
   tipo: string
+  nr_pregao: string
   ug: string
   nome_da_ug: string
   descricao_necessidade: string
-  notaCreditoId: string
+  notaCreditoId: string | null
   empenho_tipo: "ORDINARIO" | "ESTIMATIVO" | "GLOBAL"
-  contrato: boolean
+  contrato: "SIM" | "NAO"
   classe_grupo_pca: string
   nr_contratacao_pca: string
-  usuarioId: string
-  itens: RequisicaoItemPayload[]
+  userId: string
+  detalhes: RequisicaoItemPayload[]
 }
 
 /** Linha editável na tela de nova requisição (vem do pregão + campos do usuário). */
@@ -46,7 +51,7 @@ export type RequisicaoItemLinha = {
   qtd: number
 }
 
-/** Monta o payload a partir das linhas editadas na tabela. */
+/** Monta os detalhes a partir das linhas editadas na tabela. */
 export function mapLinhasToRequisicaoPayload(
   linhas: RequisicaoItemLinha[]
 ): RequisicaoItemPayload[] {

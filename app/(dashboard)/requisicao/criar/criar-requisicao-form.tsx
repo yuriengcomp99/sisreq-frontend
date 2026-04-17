@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -11,7 +11,11 @@ import { Input } from "@/app/components/ui/input"
 import { Select } from "@/app/components/ui/select"
 import { Button } from "@/app/components/ui/button"
 import { RequisicaoItensTable } from "@/app/(dashboard)/requisicao/components/requisicao-itens-table"
-import { getPregaoItens, type Item } from "@/app/services/pregoes-service"
+import {
+  getPregaoItens,
+  getPregoes,
+  type Item,
+} from "@/app/services/pregoes-service"
 import {
   createRequisicao,
   mapLinhasToRequisicaoPayload,
@@ -63,8 +67,11 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>
 
 function notaCreditoLabel(n: NotaCredito) {
-  const parts = [n.numero, n.descricao].filter(Boolean)
-  return parts.length ? parts.join(" — ") : n.id
+  const emitente = (n.emitente ?? "").trim()
+  const nr = (n.numero ?? "").trim()
+  const obs = (n.observacao ?? n.descricao ?? "").trim()
+  const parts = [emitente, nr, obs].filter(Boolean)
+  return parts.length ? parts.join(" - ") : n.id
 }
 
 function buildDataIso(values: FormValues): string {
@@ -123,12 +130,21 @@ export function CriarRequisicaoForm() {
   }, [ugg, setValue])
 
   useEffect(() => {
+    const cargo = user?.designation?.position?.trim()
+    if (cargo) {
+      setValue("de", cargo)
+    }
+  }, [user, setValue])
+
+  useEffect(() => {
+    let cancelled = false
     async function load() {
       if (!paramsOk) return
       setItensLoading(true)
       try {
-        const res = await getPregaoItens(pregao, ugg)
-        setItens(res.dados ?? [])
+        const itensRes = await getPregaoItens(pregao, ugg)
+        if (cancelled) return
+        setItens(itensRes.dados ?? [])
       } catch (e) {
         console.error(e)
         setItens([])
@@ -137,11 +153,50 @@ export function CriarRequisicaoForm() {
           title: "Não foi possível carregar os itens do pregão.",
         })
       } finally {
-        setItensLoading(false)
+        if (!cancelled) setItensLoading(false)
       }
     }
     void load()
+    return () => {
+      cancelled = true
+    }
   }, [paramsOk, pregao, ugg])
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadTipo() {
+      if (!paramsOk) return
+      try {
+        const listaRes = await getPregoes()
+        if (cancelled) return
+        const lista = listaRes.dados ?? []
+        const meta = lista.find(
+          (p) =>
+            p.pregao.trim() === pregao.trim() && p.ugg.trim() === ugg.trim()
+        )
+        if (meta?.tipoUasg) {
+          setValue("tipo", meta.tipoUasg.trim())
+        } else {
+          await Swal.fire({
+            icon: "warning",
+            title: "Pregão não encontrado na listagem",
+            text: "O tipo (UASG) não pôde ser preenchido automaticamente. Verifique pregão e UGG.",
+          })
+        }
+      } catch (e) {
+        console.error(e)
+        await Swal.fire({
+          icon: "warning",
+          title: "Não foi possível carregar o tipo do pregão.",
+          text: "Tente recarregar a página.",
+        })
+      }
+    }
+    void loadTipo()
+    return () => {
+      cancelled = true
+    }
+  }, [paramsOk, pregao, ugg, setValue])
 
   useEffect(() => {
     async function loadNotas() {
@@ -163,11 +218,6 @@ export function CriarRequisicaoForm() {
     void loadNotas()
   }, [])
 
-  const itensPayload = useMemo(
-    () => mapLinhasToRequisicaoPayload(linhasItens),
-    [linhasItens]
-  )
-
   async function onSubmit(values: FormValues) {
     if (!user?.id) {
       await Swal.fire({
@@ -176,10 +226,18 @@ export function CriarRequisicaoForm() {
       })
       return
     }
-    if (itensPayload.length === 0) {
+    if (linhasItens.length === 0) {
       await Swal.fire({
         icon: "warning",
         title: "Não há itens para enviar. Verifique o pregão e a UGG.",
+      })
+      return
+    }
+    const linhasComQuantidade = linhasItens.filter((l) => l.qtd > 0)
+    if (linhasComQuantidade.length === 0) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Informe a quantidade em pelo menos um item.",
       })
       return
     }
@@ -195,34 +253,41 @@ export function CriarRequisicaoForm() {
     }
 
     const dataIso = buildDataIso(values)
+    const detalhes = mapLinhasToRequisicaoPayload(linhasComQuantidade)
+    const notaId = (values.notaCreditoId ?? "").trim()
 
     const payload: CreateRequisicaoPayload = {
-      data: dataIso,
+      data_req: dataIso,
       numero_diex: values.numero_diex,
       nup: values.nup,
       de: values.de,
       para: values.para,
       assunto: values.assunto,
       tipo: values.tipo,
+      nr_pregao: pregao,
       ug: values.ug,
       nome_da_ug: values.nome_da_ug,
       descricao_necessidade: values.descricao_necessidade,
-      notaCreditoId: (values.notaCreditoId ?? "").trim(),
+      notaCreditoId: notaId || null,
       empenho_tipo: values.empenho_tipo,
-      contrato: values.contrato === "sim",
+      contrato: values.contrato === "sim" ? "SIM" : "NAO",
       classe_grupo_pca: values.classe_grupo_pca,
       nr_contratacao_pca: values.nr_contratacao_pca,
-      usuarioId: user.id,
-      itens: itensPayload,
+      userId: user.id,
+      detalhes,
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.debug("[createRequisicao] POST /requisicoes payload:", payload)
     }
 
     try {
       await createRequisicao(payload)
       await Swal.fire({
         icon: "success",
-        title: "Requisição enviada com sucesso.",
-        timer: 2000,
-        showConfirmButton: false,
+        title: "Requisição cadastrada",
+        text: "Os dados foram salvos. O redirecionamento para a edição será adicionado em seguida.",
+        confirmButtonText: "Ok",
       })
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Erro ao enviar."
@@ -245,7 +310,10 @@ export function CriarRequisicaoForm() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4"
+    >
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Nova requisição</h1>
         <p className="mt-1 text-sm text-zinc-600">
@@ -262,10 +330,7 @@ export function CriarRequisicaoForm() {
         ) : null}
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid gap-4 rounded-xl border border-zinc-200 bg-white p-6 md:grid-cols-3"
-      >
+      <div className="grid gap-4 rounded-xl border border-zinc-200 bg-white p-6 md:grid-cols-3">
         {Object.keys(errors).length > 0 && (
           <p className="text-sm text-red-600 md:col-span-3">
             Verifique os campos obrigatórios.
@@ -274,11 +339,29 @@ export function CriarRequisicaoForm() {
 
         <Input label="Número DIEX" {...register("numero_diex")} />
         <Input label="NUP" {...register("nup")} />
-        <Input label="De" {...register("de")} />
+        <Input
+          label="De"
+          readOnly
+          title="Preenchido com o posto/função do seu usuário (perfil)"
+          {...register("de")}
+          className="cursor-not-allowed bg-zinc-50 text-zinc-800"
+        />
 
         <Input label="Para" {...register("para")} />
-        <Input label="Tipo" {...register("tipo")} />
-        <Input label="UG" {...register("ug")} readOnly title="Preenchido a partir do parâmetro UGG da URL" />
+        <Input
+          label="Tipo"
+          readOnly
+          title="Tipo UASG do pregão (lista de pregões)"
+          {...register("tipo")}
+          className="cursor-not-allowed bg-zinc-50 text-zinc-800"
+        />
+        <Input
+          label="UG"
+          readOnly
+          title="UGG do pregão (somente leitura)"
+          {...register("ug")}
+          className="cursor-not-allowed bg-zinc-50 text-zinc-800"
+        />
 
         <div className="md:col-span-3">
           <Input label="Assunto" {...register("assunto")} />
@@ -368,13 +451,7 @@ export function CriarRequisicaoForm() {
             ))}
           </Select>
         </div>
-
-        <div className="md:col-span-3 flex justify-end pt-2">
-          <Button type="submit" loading={isSubmitting} icon={Save}>
-            Salvar requisição
-          </Button>
-        </div>
-      </form>
+      </div>
 
       <section className="flex flex-col gap-4">
         <div>
@@ -392,6 +469,12 @@ export function CriarRequisicaoForm() {
           onLinhasChange={setLinhasItens}
         />
       </section>
-    </div>
+
+      <div className="flex justify-end border-t border-zinc-200 pt-4">
+        <Button type="submit" loading={isSubmitting} icon={Save}>
+          Salvar requisição
+        </Button>
+      </div>
+    </form>
   )
 }
