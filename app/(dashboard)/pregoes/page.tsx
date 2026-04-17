@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { FileText, Tag, Calendar, Package, Building2, FilePlus, Eye  } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getPregoes } from "@/app/services/pregoes-service"
@@ -175,11 +176,13 @@ export default function PregoesPage() {
           <div className="flex flex-col justify-between items-end">
   
             <div className="flex gap-2">
-              <Button
-                icon={FilePlus}
+              <Link
+                href={`/requisicao/criar?pregao=${encodeURIComponent(pregao.pregao)}&ugg=${encodeURIComponent(pregao.ugg)}`}
+                className="px-4 py-2 rounded text-white transition flex items-center justify-center gap-2 bg-custom-blue hover:opacity-90 text-sm font-semibold"
               >
-                Gerar Requisição
-              </Button>
+                <FilePlus className="h-4 w-4" />
+                <span>Gerar Requisição</span>
+              </Link>
   
               <Button
                 icon={Eye}

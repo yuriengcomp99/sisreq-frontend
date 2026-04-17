@@ -81,14 +81,24 @@ export default function Sidebar() {
           Dashboard
         </Link>
 
-        <Link href="/profile" className={getLinkClass("/profile")}>
+        <Link href="/pregoes" className={getLinkClass("/pregoes")}>
           <FiUser size={18} />
-          Profile
+          Pregões
         </Link>
 
         <Link href="/pregoes" className={getLinkClass("/pregoes")}>
           <FiUser size={18} />
-          Pregões
+          Capacidade de Empenho
+        </Link>
+
+        <Link href="/pregoes" className={getLinkClass("/pregoes")}>
+          <FiUser size={18} />
+          Nota de Crédito
+        </Link>
+
+        <Link href="/profile" className={getLinkClass("/profile")}>
+          <FiUser size={18} />
+          Perfil
         </Link>
 
         {!loading && isAdminRole(user) && (
