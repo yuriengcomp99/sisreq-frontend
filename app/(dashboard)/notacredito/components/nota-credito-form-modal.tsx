@@ -18,7 +18,6 @@ import {
   type NotaCredito,
 } from "@/app/services/nota-credito-service"
 
-/** Tempo mínimo do skeleton ao abrir (criar e editar), evita flash quando a API responde rápido. */
 const MIN_FORM_SKELETON_MS = 240
 
 function delay(ms: number) {
