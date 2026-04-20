@@ -5,17 +5,59 @@ export interface NotaCredito {
   id: string
   numero?: string
   emitente?: string
+  favorecido?: string
   observacao?: string | null
-  /** fallback legado */
   descricao?: string
+  prazo?: string
+  valor?: number
 }
 
-/**
- * Lista notas de crédito disponíveis.
- * Ajuste o path se o back expuser outro (ex.: /nota-credito/list).
- */
+export interface CreateNotaCreditoPayload {
+  numero: string
+  emitente: string
+  favorecido: string
+  observacao: string
+  prazo: string
+  valor: number
+}
+
+export type UpdateNotaCreditoPayload = Partial<CreateNotaCreditoPayload>
+
+function notaCreditoByIdPath(id: string) {
+  return `/nota-credito/${encodeURIComponent(id)}/`
+}
+
 export async function getNotasCredito() {
   return apiFetch<ApiResponse<NotaCredito[]>>("/nota-credito", {
     method: "GET",
+  })
+}
+
+export async function getNotaCreditoById(id: string) {
+  return apiFetch<ApiResponse<NotaCredito>>(notaCreditoByIdPath(id), {
+    method: "GET",
+  })
+}
+
+export async function createNotaCredito(body: CreateNotaCreditoPayload) {
+  return apiFetch<ApiResponse<NotaCredito>>("/nota-credito", {
+    method: "POST",
+    body: JSON.stringify(body),
+  })
+}
+
+export async function updateNotaCredito(
+  id: string,
+  body: UpdateNotaCreditoPayload
+) {
+  return apiFetch<ApiResponse<NotaCredito>>(notaCreditoByIdPath(id), {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  })
+}
+
+export async function deleteNotaCredito(id: string) {
+  return apiFetch<ApiResponse<unknown>>(notaCreditoByIdPath(id), {
+    method: "DELETE",
   })
 }
