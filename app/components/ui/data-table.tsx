@@ -18,12 +18,14 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     searchKey?: string
+    searchPlaceholder?: string
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     searchKey,
+    searchPlaceholder = "Buscar itens",
 }: DataTableProps<TData, TValue>) {
     const [globalFilter, setGlobalFilter] = useState("")
 
@@ -38,12 +40,12 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
 
             {searchKey && (
                 <div className="flex justify-end">
                     <Input
-                        placeholder="Buscar itens"
+                        placeholder={searchPlaceholder}
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
                         className="max-w-xs h-9 text-sm"
@@ -51,10 +53,10 @@ export function DataTable<TData, TValue>({
                 </div>
             )}
 
-            <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+            <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                 <table className="w-full text-sm">
 
-                    <thead className="bg-zinc-50 dark:bg-zinc-900">
+                    <thead className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -78,7 +80,7 @@ export function DataTable<TData, TValue>({
                                 <tr
                                     key={row.id}
                                     className="
-                    border-t border-zinc-100 dark:border-zinc-800
+                    border-t border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-950
                     hover:bg-zinc-50 dark:hover:bg-zinc-900
                     transition
                   "
@@ -94,7 +96,7 @@ export function DataTable<TData, TValue>({
                                 </tr>
                             ))
                         ) : (
-                            <tr>
+                            <tr className="bg-white dark:bg-zinc-950">
                                 <td
                                     colSpan={columns.length}
                                     className="py-10 text-center text-zinc-500"

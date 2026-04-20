@@ -29,7 +29,9 @@ export default function Sidebar() {
     const isActive =
       path === "/requisicao"
         ? pathname === "/requisicao" || pathname.startsWith("/requisicao/")
-        : pathname === path
+        : path === "/designation"
+          ? pathname === "/designation" || pathname.startsWith("/designation/")
+          : pathname === path
 
     return `
       flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold transition

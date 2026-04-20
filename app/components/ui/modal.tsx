@@ -6,9 +6,15 @@ interface ModalProps {
   open: boolean
   onClose: () => void
   children: ReactNode
+  panelClassName?: string
 }
 
-export function Modal({ open, onClose, children }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  children,
+  panelClassName = "max-w-5xl",
+}: ModalProps) {
   useEffect(() => {
     function handleEsc(e: KeyboardEvent) {
       if (e.key === "Escape") onClose()
@@ -33,7 +39,9 @@ export function Modal({ open, onClose, children }: ModalProps) {
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-5xl mx-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-xl animate-in fade-in zoom-in-95">
+      <div
+        className={`relative z-10 mx-4 w-full rounded-2xl bg-white shadow-xl animate-in fade-in zoom-in-95 dark:bg-zinc-900 ${panelClassName}`}
+      >
         
         <div className="max-h-[80vh] overflow-y-auto p-6">
           {children}
@@ -54,9 +62,17 @@ export function ModalHeader({ children }: { children: ReactNode }) {
   )
 }
 
-export function ModalBody({ children }: { children: ReactNode }) {
+export function ModalBody({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
   return (
-    <div className="py-2 text-sm text-zinc-600 dark:text-zinc-300">
+    <div
+      className={`py-2 text-sm text-zinc-600 dark:text-zinc-300 ${className ?? ""}`}
+    >
       {children}
     </div>
   )
@@ -64,7 +80,7 @@ export function ModalBody({ children }: { children: ReactNode }) {
 
 export function ModalFooter({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-2 flex justify-end gap-2 border-t pt-4">
+    <div className="mt-4 flex justify-end gap-2">
       {children}
     </div>
   )
