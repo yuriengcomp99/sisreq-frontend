@@ -55,20 +55,15 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="
-      w-64 
-      h-screen 
-      bg-white 
-      border-r 
-      border-gray-200 
-      shadow-[4px_0_10px_rgba(0,0,0,0.05)] 
-      p-4 
-      flex 
-      flex-col
-      sticky top-0
-    ">
+    <div
+      className="
+      sticky top-0 flex h-screen min-h-0 w-64 flex-col
+      border-r border-gray-200 bg-white p-4
+      shadow-[4px_0_10px_rgba(0,0,0,0.05)]
+    "
+    >
 
-      <div className="mb-5 flex w-full justify-center px-1">
+      <div className="mb-5 flex w-full shrink-0 justify-center px-1">
         <div className="relative h-28 w-full max-w-[14rem] shrink-0">
           <Image
             src="/logo_normal.png"
@@ -81,7 +76,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="mb-4 min-h-[3.5rem] text-center">
+      <div className="mb-4 min-h-[3.5rem] shrink-0 text-center">
         {loading ? (
           <>
             <div className="mx-auto mb-2 h-7 w-44 animate-pulse rounded bg-gray-200" />
@@ -99,7 +94,10 @@ export default function Sidebar() {
         )}
       </div>
 
-      <nav className="flex flex-col gap-2">
+      <nav
+        className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden pr-1"
+        aria-label="Menu principal"
+      >
 
         <Link href="/dashboard" className={getLinkClass("/dashboard")}>
           <FiHome size={18} />
@@ -156,7 +154,7 @@ export default function Sidebar() {
 
       </nav>
 
-      <div className="mt-auto pt-6">
+      <div className="shrink-0 border-t border-gray-100 pt-4 dark:border-zinc-800">
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold transition text-gray-text hover:bg-gray-100 w-full cursor-pointer"
