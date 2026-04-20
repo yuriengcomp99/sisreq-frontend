@@ -120,7 +120,7 @@ export default function Sidebar() {
               Cadastrar Usuários
             </Link>
 
-            <Link href="/setor/create" className={getLinkClass("/setor/create")}>
+            <Link href="/designation" className={getLinkClass("/designation")}>
               <FiLayers size={18} />
               Cadastrar Setor
             </Link>
