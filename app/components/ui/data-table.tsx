@@ -40,7 +40,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="space-y-4 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="space-y-4 rounded-xl">
 
             {searchKey && (
                 <div className="flex justify-end">

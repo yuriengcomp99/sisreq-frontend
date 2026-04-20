@@ -1,7 +1,14 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import {
+  CircleDollarSign,
+  FileCheckCorner,
+  FileSearchCorner,
+  ListCheck,
+} from "lucide-react"
 import { FiHome, FiUser, FiLogOut, FiUsers, FiLayers, FiEdit } from "react-icons/fi"
 import { logout } from "@/app/services/auth-service"
 import { useUser, type ProfileUser } from "@/app/contexts/user-context"
@@ -61,6 +68,19 @@ export default function Sidebar() {
       sticky top-0
     ">
 
+      <div className="mb-5 flex w-full justify-center px-1">
+        <div className="relative h-28 w-full max-w-[14rem] shrink-0">
+          <Image
+            src="/logo_normal.png"
+            alt="Logo"
+            fill
+            className="object-contain object-center"
+            sizes="224px"
+            priority
+          />
+        </div>
+      </div>
+
       <div className="mb-4 min-h-[3.5rem] text-center">
         {loading ? (
           <>
@@ -87,22 +107,22 @@ export default function Sidebar() {
         </Link>
 
         <Link href="/pregoes" className={getLinkClass("/pregoes")}>
-          <FiUser size={18} />
+          <ListCheck size={18} className="shrink-0" aria-hidden />
           Pregões
         </Link>
 
         <Link href="/capacidade" className={getLinkClass("/capacidade")}>
-          <FiUser size={18} />
+          <FileSearchCorner size={18} className="shrink-0" aria-hidden />
           Capacidade de Empenho
         </Link>
 
         <Link href="/notacredito" className={getLinkClass("/notacredito")}>
-          <FiUser size={18} />
+          <CircleDollarSign size={18} className="shrink-0" aria-hidden />
           Nota de Crédito
         </Link>
 
         <Link href="/requisicao" className={getLinkClass("/requisicao")}>
-          <FiUser size={18} />
+          <FileCheckCorner size={18} className="shrink-0" aria-hidden />
           Requisição
         </Link>
 
