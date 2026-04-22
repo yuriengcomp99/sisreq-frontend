@@ -135,7 +135,7 @@ export default function Sidebar() {
               Admin
             </span>
 
-            <Link href="/users/create" className={getLinkClass("/users/create")}>
+            <Link href="/useradmin" className={getLinkClass("/useradmin")}>
               <FiUsers size={18} />
               Cadastrar Usuários
             </Link>
