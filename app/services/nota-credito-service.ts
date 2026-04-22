@@ -10,6 +10,14 @@ export interface NotaCredito {
   descricao?: string
   prazo?: string
   valor?: number
+  /** Quantidade de requisições vinculadas à nota. */
+  requisicaoCount?: number
+  /** Soma dos valores consumidos em requisições. */
+  valorTotalRequisicoes?: number
+  /** Valor da nota menos o consumido em requisições. */
+  valorRestante?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface CreateNotaCreditoPayload {

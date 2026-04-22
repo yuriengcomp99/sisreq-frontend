@@ -111,23 +111,23 @@ export default function NotaCreditoPage() {
             <div className="h-9 w-full max-w-xs animate-pulse rounded-md border border-transparent bg-gray-200" />
           </div>
           <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="flex items-center gap-3 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
-              {Array.from({ length: 7 }).map((_, i) => (
+            <div className="flex items-center gap-2 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
+              {Array.from({ length: 9 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-3.5 min-w-[4rem] flex-1 animate-pulse rounded bg-gray-200 dark:bg-zinc-700 first:max-w-[100px] last:max-w-[80px] last:flex-none"
+                  className="h-3.5 min-w-[3rem] flex-1 animate-pulse rounded bg-gray-200 dark:bg-zinc-700 first:max-w-[100px] last:max-w-[80px] last:flex-none"
                 />
               ))}
             </div>
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 border-t border-zinc-100 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950"
+                className="flex items-center gap-2 border-t border-zinc-100 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950"
               >
-                {Array.from({ length: 7 }).map((_, j) => (
+                {Array.from({ length: 9 }).map((_, j) => (
                   <div
                     key={j}
-                    className="h-4 min-w-[3rem] flex-1 animate-pulse rounded bg-gray-200 dark:bg-zinc-800 first:max-w-[100px] last:max-w-[72px] last:flex-none"
+                    className="h-4 min-w-[2.5rem] flex-1 animate-pulse rounded bg-gray-200 dark:bg-zinc-800 first:max-w-[100px] last:max-w-[72px] last:flex-none"
                   />
                 ))}
               </div>

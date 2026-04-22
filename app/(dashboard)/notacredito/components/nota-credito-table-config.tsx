@@ -64,7 +64,7 @@ export function createNotaCreditoTableColumns({
         const value = cellText(raw)
         return (
           <Tooltip content={value}>
-            <div className="max-w-[260px] cursor-default truncate text-zinc-600">
+            <div className="max-w-[200px] cursor-default truncate text-zinc-600">
               {value}
             </div>
           </Tooltip>
@@ -93,6 +93,39 @@ export function createNotaCreditoTableColumns({
         return (
           <span className="whitespace-nowrap font-semibold text-green-600">
             {v != null ? formatCurrency(v) : "—"}
+          </span>
+        )
+      },
+    },
+    {
+      accessorKey: "valorTotalRequisicoes",
+      header: "Consumido",
+      size: 118,
+      cell: ({ row }) => {
+        const v = row.original.valorTotalRequisicoes
+        return (
+          <span className="whitespace-nowrap tabular-nums text-zinc-600">
+            {v != null ? formatCurrency(v) : "—"}
+          </span>
+        )
+      },
+    },
+    {
+      accessorKey: "valorRestante",
+      header: "Disponível",
+      size: 118,
+      cell: ({ row }) => {
+        const v = row.original.valorRestante
+        if (v == null) {
+          return <span className="whitespace-nowrap text-zinc-400">—</span>
+        }
+        return (
+          <span
+            className={`whitespace-nowrap font-semibold tabular-nums ${
+              v > 0 ? "text-emerald-600" : "text-zinc-500"
+            }`}
+          >
+            {formatCurrency(v)}
           </span>
         )
       },
