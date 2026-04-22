@@ -1,15 +1,22 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { FiEdit2 } from "react-icons/fi"
 import { Tooltip } from "@/app/components/ui/tooltip"
 import type { User } from "@/app/services/auth-service"
+
+export interface UsersAdminTableActions {
+  onEdit: (row: User) => void
+}
 
 function cellText(value: string | null | undefined) {
   const t = (value ?? "").trim()
   return t.length ? t : "—"
 }
 
-export function createUsersAdminTableColumns(): ColumnDef<User>[] {
+export function createUsersAdminTableColumns({
+  onEdit,
+}: UsersAdminTableActions): ColumnDef<User>[] {
   return [
     {
       accessorKey: "first_name",
@@ -66,6 +73,26 @@ export function createUsersAdminTableColumns(): ColumnDef<User>[] {
           {cellText(row.original.om)}
         </span>
       ),
+    },
+    {
+      id: "acoes",
+      header: "Ações",
+      size: 88,
+      cell: ({ row }) => {
+        const u = row.original
+        return (
+          <div className="flex items-center justify-end gap-1">
+            <button
+              type="button"
+              title="Editar"
+              onClick={() => onEdit(u)}
+              className="cursor-pointer rounded p-2 text-custom-blue transition hover:bg-blue-50"
+            >
+              <FiEdit2 size={18} aria-hidden />
+            </button>
+          </div>
+        )
+      },
     },
   ]
 }

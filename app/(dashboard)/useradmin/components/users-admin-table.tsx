@@ -7,10 +7,14 @@ import { createUsersAdminTableColumns } from "./users-admin-table-config"
 
 interface UsersAdminTableProps {
   data: User[]
+  onEdit: (row: User) => void
 }
 
-export function UsersAdminTable({ data }: UsersAdminTableProps) {
-  const columns = useMemo(() => createUsersAdminTableColumns(), [])
+export function UsersAdminTable({ data, onEdit }: UsersAdminTableProps) {
+  const columns = useMemo(
+    () => createUsersAdminTableColumns({ onEdit }),
+    [onEdit]
+  )
 
   return (
     <DataTable

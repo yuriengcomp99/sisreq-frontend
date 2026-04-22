@@ -1,4 +1,4 @@
-const HEADER_CELLS = 5
+const HEADER_CELLS = 6
 const ROWS = 6
 
 export function UsersAdminListSkeleton() {

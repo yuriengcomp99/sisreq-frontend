@@ -6,16 +6,16 @@ function adminUserByIdPath(id: string) {
   return `/auth/users/${encodeURIComponent(id)}`
 }
 
-/** Corpo para cadastro de usuário pelo administrador (ajuste os campos conforme o contrato da API). */
+/** Corpo para cadastro de usuário pelo administrador. */
 export interface CreateAdminUserPayload {
   email: string
   password: string
-  first_name?: string
-  army_name?: string
-  graduation?: string
-  role?: string
-  om?: string
-  designationId?: string
+  first_name: string
+  army_name: string
+  graduation: string
+  role: string
+  om: string
+  designationId: string
 }
 
 export type UpdateAdminUserPayload = Partial<

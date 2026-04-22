@@ -2,15 +2,27 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { FiPlus } from "react-icons/fi"
+import { UserAdminFormModal } from "@/app/(dashboard)/useradmin/components/user-admin-form-modal"
 import { UsersAdminListSkeleton } from "@/app/(dashboard)/useradmin/components/users-admin-list-skeleton"
 import { UsersAdminTable } from "@/app/(dashboard)/useradmin/components/users-admin-table"
 import { Button } from "@/app/components/ui/button"
 import type { User } from "@/app/services/auth-service"
 import { listAdminUsers } from "@/app/services/admin-users-service"
 
+type FormModalState = {
+  open: boolean
+  userId: string | null
+}
+
+const closedFormModal: FormModalState = {
+  open: false,
+  userId: null,
+}
+
 export default function UserAdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+  const [formModal, setFormModal] = useState<FormModalState>(closedFormModal)
 
   const loadList = useCallback(async () => {
     const res = await listAdminUsers()
@@ -35,8 +47,24 @@ export default function UserAdminPage() {
     }
   }, [loadList])
 
-  const handleNewUser = useCallback(() => {
-    // Modal de cadastro será implementada na sequência
+  const openCreateModal = useCallback(() => {
+    setFormModal({ open: true, userId: null })
+  }, [])
+
+  const handleEdit = useCallback((row: User) => {
+    setFormModal({ open: true, userId: row.id })
+  }, [])
+
+  const handleSaved = useCallback((user: User, isCreate: boolean) => {
+    if (isCreate) {
+      setUsers((prev) =>
+        [...prev, user].sort((a, b) =>
+          (a.first_name ?? "").localeCompare(b.first_name ?? "", "pt-BR")
+        )
+      )
+    } else {
+      setUsers((prev) => prev.map((u) => (u.id === user.id ? user : u)))
+    }
   }, [])
 
   if (loading) {
@@ -56,13 +84,20 @@ export default function UserAdminPage() {
           type="button"
           icon={FiPlus}
           className="self-start sm:self-auto"
-          onClick={handleNewUser}
+          onClick={openCreateModal}
         >
           Novo usuário
         </Button>
       </div>
 
-      <UsersAdminTable data={users} />
+      <UsersAdminTable data={users} onEdit={handleEdit} />
+
+      <UserAdminFormModal
+        open={formModal.open}
+        onClose={() => setFormModal(closedFormModal)}
+        userId={formModal.userId}
+        onSaved={handleSaved}
+      />
     </div>
   )
 }
