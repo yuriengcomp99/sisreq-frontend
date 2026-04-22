@@ -1,12 +1,13 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { FiEdit2 } from "react-icons/fi"
+import { FiEdit2, FiTrash2 } from "react-icons/fi"
 import { Tooltip } from "@/app/components/ui/tooltip"
 import type { User } from "@/app/services/auth-service"
 
 export interface UsersAdminTableActions {
   onEdit: (row: User) => void
+  onDelete: (row: User) => void
 }
 
 function cellText(value: string | null | undefined) {
@@ -16,6 +17,7 @@ function cellText(value: string | null | undefined) {
 
 export function createUsersAdminTableColumns({
   onEdit,
+  onDelete,
 }: UsersAdminTableActions): ColumnDef<User>[] {
   return [
     {
@@ -77,7 +79,7 @@ export function createUsersAdminTableColumns({
     {
       id: "acoes",
       header: "Ações",
-      size: 88,
+      size: 120,
       cell: ({ row }) => {
         const u = row.original
         return (
@@ -89,6 +91,14 @@ export function createUsersAdminTableColumns({
               className="cursor-pointer rounded p-2 text-custom-blue transition hover:bg-blue-50"
             >
               <FiEdit2 size={18} aria-hidden />
+            </button>
+            <button
+              type="button"
+              title="Excluir"
+              onClick={() => onDelete(u)}
+              className="cursor-pointer rounded p-2 text-red-600 transition hover:bg-red-50"
+            >
+              <FiTrash2 size={18} aria-hidden />
             </button>
           </div>
         )

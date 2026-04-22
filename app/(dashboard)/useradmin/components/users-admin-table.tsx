@@ -8,12 +8,13 @@ import { createUsersAdminTableColumns } from "./users-admin-table-config"
 interface UsersAdminTableProps {
   data: User[]
   onEdit: (row: User) => void
+  onDelete: (row: User) => void
 }
 
-export function UsersAdminTable({ data, onEdit }: UsersAdminTableProps) {
+export function UsersAdminTable({ data, onEdit, onDelete }: UsersAdminTableProps) {
   const columns = useMemo(
-    () => createUsersAdminTableColumns({ onEdit }),
-    [onEdit]
+    () => createUsersAdminTableColumns({ onEdit, onDelete }),
+    [onEdit, onDelete]
   )
 
   return (

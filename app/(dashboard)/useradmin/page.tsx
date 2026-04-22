@@ -2,12 +2,16 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { FiPlus } from "react-icons/fi"
+import Swal from "sweetalert2"
 import { UserAdminFormModal } from "@/app/(dashboard)/useradmin/components/user-admin-form-modal"
 import { UsersAdminListSkeleton } from "@/app/(dashboard)/useradmin/components/users-admin-list-skeleton"
 import { UsersAdminTable } from "@/app/(dashboard)/useradmin/components/users-admin-table"
 import { Button } from "@/app/components/ui/button"
 import type { User } from "@/app/services/auth-service"
-import { listAdminUsers } from "@/app/services/admin-users-service"
+import {
+  deleteAdminUser,
+  listAdminUsers,
+} from "@/app/services/admin-users-service"
 
 type FormModalState = {
   open: boolean
@@ -67,6 +71,35 @@ export default function UserAdminPage() {
     }
   }, [])
 
+  const handleDelete = useCallback(async (row: User) => {
+    const label =
+      (row.first_name ?? "").trim() ||
+      (row.email ?? "").trim() ||
+      row.id
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Excluir usuário?",
+      text: label,
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc2626",
+    })
+    if (!result.isConfirmed) return
+    try {
+      await deleteAdminUser(row.id)
+      setUsers((prev) => prev.filter((u) => u.id !== row.id))
+      await Swal.fire({
+        icon: "success",
+        title: "Usuário removido",
+      })
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Não foi possível excluir."
+      await Swal.fire({ icon: "error", title: message })
+    }
+  }, [])
+
   if (loading) {
     return <UsersAdminListSkeleton />
   }
@@ -90,7 +123,11 @@ export default function UserAdminPage() {
         </Button>
       </div>
 
-      <UsersAdminTable data={users} onEdit={handleEdit} />
+      <UsersAdminTable
+        data={users}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
       <UserAdminFormModal
         open={formModal.open}
