@@ -1,6 +1,32 @@
 import { apiFetch } from "@/app/lib/api"
 import type { ApiResponse, Item } from "@/app/services/pregoes-service"
 
+/** Campos da requisição na listagem GET /requisicoes (sem `detalhes`; com total). */
+export type RequisicaoLista = {
+  id: string
+  numero_diex: string
+  nup: string
+  data_req: string
+  de: string
+  para: string
+  assunto: string
+  tipo: string
+  nr_pregao: string
+  ug: string
+  nome_da_ug: string
+  descricao_necessidade: string
+  notaCreditoId: string | null
+  empenho_tipo: string
+  contrato: string
+  classe_grupo_pca: string
+  nr_contratacao_pca: string
+  userId: string
+  createdAt: string
+  updatedAt: string
+  /** Soma dos `valor_total` dos itens (detalhes não vêm na listagem). */
+  valorTotal: number
+}
+
 export interface RequisicaoItemPayload {
   nr_item: string
   descricao: string
@@ -93,5 +119,12 @@ export async function createRequisicao(payload: CreateRequisicaoPayload) {
   return apiFetch<ApiResponse<unknown>>("/requisicoes", {
     method: "POST",
     body: JSON.stringify(payload),
+  })
+}
+
+/** Lista requisições com `valorTotal`; não inclui itens (`detalhes`). */
+export async function getRequisicoes() {
+  return apiFetch<ApiResponse<RequisicaoLista[]>>("/requisicoes", {
+    method: "GET",
   })
 }
