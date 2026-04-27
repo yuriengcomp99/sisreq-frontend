@@ -11,7 +11,10 @@ import {
 } from "@tanstack/react-table"
 import { Calculator, ChevronLeft, ChevronRight, Coins, Package } from "lucide-react"
 import type { Item } from "@/app/services/pregoes-service"
-import type { RequisicaoItemLinha } from "@/app/services/requisicao-service"
+import type {
+  RequisicaoDetalheApi,
+  RequisicaoItemLinha,
+} from "@/app/services/requisicao-service"
 import { formatCurrency, formatNumber } from "@/app/lib/format"
 import { Tooltip } from "@/app/components/ui/tooltip"
 import { Input } from "@/app/components/ui/input"
@@ -41,12 +44,15 @@ type RequisicaoItensTableProps = {
   loading?: boolean
   items: Item[]
   onLinhasChange: (linhas: RequisicaoItemLinha[]) => void
+  /** Ao editar: detalhes salvos para preencher subitem, UND, qtd e `detalheId`. */
+  detalhesSalvos?: RequisicaoDetalheApi[] | null
 }
 
 export function RequisicaoItensTable({
   loading,
   items,
   onLinhasChange,
+  detalhesSalvos,
 }: RequisicaoItensTableProps) {
   const [linhas, setLinhas] = useState<RequisicaoItemLinha[]>([])
   const [globalFilter, setGlobalFilter] = useState("")
@@ -64,8 +70,25 @@ export function RequisicaoItensTable({
       setLinhas([])
       return
     }
-    setLinhas(items.map(itemToLinha))
-  }, [items])
+    const porNrItem = new Map<string, RequisicaoDetalheApi>()
+    for (const det of detalhesSalvos ?? []) {
+      porNrItem.set(det.nr_item.trim(), det)
+    }
+    setLinhas(
+      items.map((item, index) => {
+        const base = itemToLinha(item, index)
+        const saved = porNrItem.get(item.nrItem.trim())
+        if (!saved) return base
+        return {
+          ...base,
+          detalheId: saved.id,
+          subitem: saved.subitem ?? "",
+          und: saved.und ?? "",
+          qtd: typeof saved.qtd === "number" ? saved.qtd : base.qtd,
+        }
+      })
+    )
+  }, [items, detalhesSalvos])
 
   useEffect(() => {
     syncFromItems()

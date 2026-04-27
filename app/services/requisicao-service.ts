@@ -75,6 +75,88 @@ export type RequisicaoItemLinha = {
   subitem: string
   und: string
   qtd: number
+  /** Ao editar: id do detalhe no backend (`PATCH` com `itens[].id`). */
+  detalheId?: string | null
+}
+
+/** Detalhe retornado por `GET /requisicoes/:id` (Prisma). */
+export type RequisicaoDetalheApi = {
+  id: string
+  nr_item: string
+  descricao: string
+  subitem: string
+  und: string
+  qtd: number
+  valor_unitario: number
+  valor_total: number
+}
+
+/** Requisição completa com itens (`GET /requisicoes/:id`). */
+export type RequisicaoPorId = {
+  id: string
+  numero_diex: string
+  nup: string
+  data_req: string
+  de: string
+  para: string
+  assunto: string
+  tipo: string
+  nr_pregao: string
+  ug: string
+  nome_da_ug: string
+  descricao_necessidade: string
+  notaCreditoId: string | null
+  empenho_tipo: string
+  contrato: string
+  classe_grupo_pca: string
+  nr_contratacao_pca: string
+  userId: string
+  detalhes: RequisicaoDetalheApi[]
+}
+
+/**
+ * Item existente: `id` + campos editáveis (sem `nr_item`, conforme PATCH na doc).
+ * Item novo: sem `id`, com `nr_item` e demais campos obrigatórios.
+ */
+export type UpdateRequisicaoItemPayload =
+  | {
+      id: string
+      descricao: string
+      subitem: string
+      und: string
+      qtd: number
+      valor_unitario: number
+      valor_total: number
+    }
+  | {
+      nr_item: string
+      descricao: string
+      subitem: string
+      und: string
+      qtd: number
+      valor_unitario: number
+      valor_total: number
+    }
+
+/** Corpo do `PATCH /requisicoes/:id` (use case espera `itens`, não `detalhes`). */
+export type UpdateRequisicaoPayload = {
+  data_req: string
+  numero_diex: string
+  nup: string
+  de: string
+  para: string
+  assunto: string
+  tipo: string
+  nr_pregao: string
+  ug: string
+  nome_da_ug: string
+  descricao_necessidade: string
+  notaCreditoId: string | null
+  empenho_tipo: "ORDINARIO" | "ESTIMATIVO" | "GLOBAL"
+  contrato: "SIM" | "NAO"
+  classe_grupo_pca: string
+  nr_contratacao_pca: string
+  itens: UpdateRequisicaoItemPayload[]
 }
 
 /**
@@ -125,6 +207,41 @@ export function mapLinhasToRequisicaoPayload(
   })
 }
 
+/** Monta `itens` para `PATCH /requisicoes/:id` (existente vs novo, conforme documentação da API). */
+export function mapLinhasToUpdateItensPayload(
+  linhas: RequisicaoItemLinha[]
+): UpdateRequisicaoItemPayload[] {
+  return linhas.map((linha) => {
+    const vu = linha.valorUnitario
+    const qtd = linha.qtd
+    const valor_total = vu * qtd
+    const descricao = linha.descricao
+    const subitem = linha.subitem.trim()
+    const und = linha.und.trim()
+    const id = linha.detalheId?.trim()
+    if (id) {
+      return {
+        id,
+        descricao,
+        subitem,
+        und,
+        qtd,
+        valor_unitario: vu,
+        valor_total,
+      }
+    }
+    return {
+      nr_item: linha.nrItem,
+      descricao,
+      subitem,
+      und,
+      qtd,
+      valor_unitario: vu,
+      valor_total,
+    }
+  })
+}
+
 /** @deprecated Prefira mapLinhasToRequisicaoPayload com a tabela editável. */
 export function mapPregaoItensToRequisicaoPayload(
   itens: Item[]
@@ -156,4 +273,20 @@ export async function getRequisicoes() {
   return apiFetch<ApiResponse<RequisicaoLista[]>>("/requisicoes", {
     method: "GET",
   })
+}
+
+export async function getRequisicaoById(id: string) {
+  return apiFetch<ApiResponse<RequisicaoPorId>>(`/requisicoes/${encodeURIComponent(id)}`, {
+    method: "GET",
+  })
+}
+
+export async function updateRequisicao(id: string, payload: UpdateRequisicaoPayload) {
+  return apiFetch<ApiResponse<unknown>>(
+    `/requisicoes/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }
+  )
 }
