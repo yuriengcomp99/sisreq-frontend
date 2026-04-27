@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Bell, UserRound } from "lucide-react"
+import { UserRound } from "lucide-react"
 import { getUnreadNotificationCount } from "@/app/services/notifications-service"
+import NotificationBellMenu from "@/app/components/layout/notification-bell-menu"
 
 function normalizeCount(value: unknown): number {
   const n = typeof value === "number" ? value : Number(value)
@@ -70,21 +71,11 @@ export default function Topbar() {
       role="banner"
     >
       <div className="flex items-center gap-1">
-        <button
-          type="button"
-          className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-gray-text transition hover:bg-gray-100 hover:text-black"
-          aria-label="Notificações"
-        >
-          <Bell className="h-5 w-5" strokeWidth={2} aria-hidden />
-          {unreadCount > 0 ? (
-            <span
-              className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white"
-              aria-live="polite"
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </span>
-          ) : null}
-        </button>
+        <NotificationBellMenu
+          unreadCount={unreadCount}
+          pathname={pathname}
+          onUnreadCountUpdated={refreshUnreadCount}
+        />
 
         <div className="relative" ref={profileWrapRef}>
           <button
