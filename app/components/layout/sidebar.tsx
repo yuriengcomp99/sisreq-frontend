@@ -9,7 +9,7 @@ import {
   FileSearchCorner,
   ListCheck,
 } from "lucide-react"
-import { FiHome, FiUser, FiLogOut, FiUsers, FiLayers, FiEdit } from "react-icons/fi"
+import { FiHome, FiLogOut, FiUsers, FiLayers, FiEdit } from "react-icons/fi"
 import { logout } from "@/app/services/auth-service"
 import { useUser, type ProfileUser } from "@/app/contexts/user-context"
 
@@ -122,11 +122,6 @@ export default function Sidebar() {
         <Link href="/requisicao" className={getLinkClass("/requisicao")}>
           <FileCheckCorner size={18} className="shrink-0" aria-hidden />
           Requisição
-        </Link>
-
-        <Link href="/profile" className={getLinkClass("/profile")}>
-          <FiUser size={18} />
-          Perfil
         </Link>
 
         {!loading && isAdminRole(user) && (
