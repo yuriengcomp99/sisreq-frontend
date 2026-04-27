@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { UserRound } from "lucide-react"
 import { getUnreadNotificationCount } from "@/app/services/notifications-service"
+import { subscribeNotificationsWebSocketWithSession } from "@/app/services/ws-gateway-service"
 import NotificationBellMenu from "@/app/components/layout/notification-bell-menu"
 
 function normalizeCount(value: unknown): number {
@@ -34,6 +35,14 @@ export default function Topbar() {
   useEffect(() => {
     refreshUnreadCount()
   }, [refreshUnreadCount])
+
+  useEffect(() => {
+    return subscribeNotificationsWebSocketWithSession({
+      onUnreadCount: (count) => {
+        setUnreadCount(normalizeCount(count))
+      },
+    })
+  }, [])
 
   useEffect(() => {
     function onVisible() {

@@ -62,15 +62,13 @@ export default function NotificationBellMenu({
       .finally(() => setLoading(false))
   }, [])
 
-  /** Ao abrir o painel (clique no sino): PATCH read-all, atualiza contador e lista. */
-  const runMarkAllAndRefresh = useCallback(async () => {
+  /**
+   * Ao abrir o painel: primeiro carrega as não lidas para exibir o texto;
+   * só depois marca todas como lidas no servidor e atualiza o contador (sem apagar a lista na tela).
+   */
+  const runOpenPanelFlow = useCallback(async () => {
     setLoading(true)
     setItems([])
-    try {
-      await markAllNotificationsRead()
-    } finally {
-      onUnreadCountUpdated?.()
-    }
     try {
       const list = await getUnreadNotifications()
       setItems(Array.isArray(list) ? list : [])
@@ -78,6 +76,14 @@ export default function NotificationBellMenu({
       setItems([])
     } finally {
       setLoading(false)
+    }
+
+    try {
+      await markAllNotificationsRead()
+    } catch {
+      /* servidor pode falhar; lista já está visível */
+    } finally {
+      onUnreadCountUpdated?.()
     }
   }, [onUnreadCountUpdated])
 
@@ -122,12 +128,13 @@ export default function NotificationBellMenu({
             if (wasOpen) {
               setSuppressBellNumber(false)
               setLoading(false)
+              setItems([])
               return false
             }
             setSuppressBellNumber(true)
             setLoading(true)
             setItems([])
-            void runMarkAllAndRefresh()
+            void runOpenPanelFlow()
             return true
           })
         }}
