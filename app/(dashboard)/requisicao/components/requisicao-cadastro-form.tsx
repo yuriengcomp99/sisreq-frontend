@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Swal from "sweetalert2"
-import { Save } from "lucide-react"
+import { FileDown, FileText, Save } from "lucide-react"
 import { Input } from "@/app/components/ui/input"
 import { Select } from "@/app/components/ui/select"
 import { Button } from "@/app/components/ui/button"
@@ -566,19 +566,39 @@ export function RequisicaoCadastroForm({
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4"
     >
-      <div>
-        <h1 className="text-2xl font-bold text-zinc-900">{titulo}</h1>
-        <p className="mt-1 text-sm text-zinc-600">
-          Pregão <span className="font-medium">{pregao}</span> · UGG{" "}
-          <span className="font-medium">{ugg}</span>
-        </p>
-        {userLoading ? (
-          <p className="mt-2 text-sm text-zinc-500">Carregando usuário…</p>
-        ) : !user ? (
-          <p className="mt-2 text-sm text-red-600">
-            Não foi possível carregar o usuário. Recarregue a página ou entre
-            novamente.
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl font-bold text-zinc-900">{titulo}</h1>
+          <p className="mt-1 text-sm text-zinc-600">
+            Pregão <span className="font-medium">{pregao}</span> · UGG{" "}
+            <span className="font-medium">{ugg}</span>
           </p>
+          {userLoading ? (
+            <p className="mt-2 text-sm text-zinc-500">Carregando usuário…</p>
+          ) : !user ? (
+            <p className="mt-2 text-sm text-red-600">
+              Não foi possível carregar o usuário. Recarregue a página ou entre
+              novamente.
+            </p>
+          ) : null}
+        </div>
+        {isEdit ? (
+          <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+            >
+              <FileText className="h-4 w-4 shrink-0 text-red-600" aria-hidden />
+              Visualizar PDF
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+            >
+              <FileDown className="h-4 w-4 shrink-0 text-custom-blue" aria-hidden />
+              Baixar Word
+            </button>
+          </div>
         ) : null}
       </div>
 

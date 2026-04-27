@@ -68,20 +68,12 @@ export function EditarRequisicaoClient({ requisicaoId }: { requisicaoId: string 
   const ugg = data.ug?.trim() ?? ""
 
   return (
-    <div className="flex flex-col gap-4">
-      <Link
-        href="/requisicao"
-        className="text-sm font-medium text-custom-blue hover:underline w-fit"
-      >
-        ← Voltar para requisições
-      </Link>
-      <RequisicaoCadastroForm
-        mode="edit"
-        requisicaoId={requisicaoId}
-        pregao={pregao}
-        ugg={ugg}
-        initialRequisicao={data}
-      />
-    </div>
+    <RequisicaoCadastroForm
+      mode="edit"
+      requisicaoId={requisicaoId}
+      pregao={pregao}
+      ugg={ugg}
+      initialRequisicao={data}
+    />
   )
 }
