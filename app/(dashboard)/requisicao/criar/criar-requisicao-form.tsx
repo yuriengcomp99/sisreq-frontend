@@ -19,6 +19,7 @@ import {
 import {
   createRequisicao,
   mapLinhasToRequisicaoPayload,
+  partitionLinhasItensParaPayload,
   type CreateRequisicaoPayload,
   type RequisicaoItemLinha,
 } from "@/app/services/requisicao-service"
@@ -349,11 +350,27 @@ export function CriarRequisicaoForm() {
       })
       return
     }
-    const linhasComQuantidade = linhasItens.filter((l) => l.qtd > 0)
-    if (linhasComQuantidade.length === 0) {
+
+    const { completas: linhasCompletas, parciais: linhasParciais } =
+      partitionLinhasItensParaPayload(linhasItens)
+
+    if (linhasParciais.length > 0) {
+      const itensLabel = linhasParciais
+        .map((l) => l.nrItem.trim() || "—")
+        .join(", ")
       await Swal.fire({
         icon: "warning",
-        title: "Informe a quantidade em pelo menos um item.",
+        title: "Itens incompletos",
+        html: `<p class="text-left text-sm">Se você preencher <strong>subitem</strong>, <strong>UND</strong> ou <strong>quantidade</strong> em uma linha, os três passam a ser obrigatórios para incluir esse item na requisição.</p><p class="mt-2 text-left text-sm">Complete os dados ou apague o que preencheu nas linhas dos itens: <strong>${itensLabel}</strong>.</p>`,
+      })
+      return
+    }
+
+    if (linhasCompletas.length === 0) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Inclua pelo menos um item",
+        text: "Preencha subitem, UND e quantidade (maior que zero) em pelo menos uma linha da tabela. Linhas totalmente em branco são ignoradas.",
       })
       return
     }
@@ -369,7 +386,7 @@ export function CriarRequisicaoForm() {
     }
 
     const dataIso = buildDataIso(values)
-    const detalhes = mapLinhasToRequisicaoPayload(linhasComQuantidade)
+    const detalhes = mapLinhasToRequisicaoPayload(linhasCompletas)
     const notaId = (values.notaCreditoId ?? "").trim()
 
     const payload: CreateRequisicaoPayload = {

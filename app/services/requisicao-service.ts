@@ -77,6 +77,35 @@ export type RequisicaoItemLinha = {
   qtd: number
 }
 
+/**
+ * Separa linhas da tabela de itens para montagem do payload:
+ * - `completas`: subitem e UND (após trim) preenchidos e quantidade > 0 — entram no POST.
+ * - `parciais`: usuário começou a preencher algum de (subitem, UND, qtd) mas não os três
+ *   válidos juntos — devem gerar erro de validação na UI.
+ * Linhas totalmente vazias (nada preenchido / qtd 0) são ignoradas.
+ */
+export function partitionLinhasItensParaPayload(linhas: RequisicaoItemLinha[]): {
+  completas: RequisicaoItemLinha[]
+  parciais: RequisicaoItemLinha[]
+} {
+  const completas: RequisicaoItemLinha[] = []
+  const parciais: RequisicaoItemLinha[] = []
+
+  for (const linha of linhas) {
+    const sub = linha.subitem.trim()
+    const und = linha.und.trim()
+    const qtd = linha.qtd
+
+    const algum = sub !== "" || und !== "" || qtd > 0
+    const completa = sub !== "" && und !== "" && qtd > 0
+
+    if (completa) completas.push(linha)
+    else if (algum) parciais.push(linha)
+  }
+
+  return { completas, parciais }
+}
+
 /** Monta os detalhes a partir das linhas editadas na tabela. */
 export function mapLinhasToRequisicaoPayload(
   linhas: RequisicaoItemLinha[]
