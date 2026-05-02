@@ -50,9 +50,19 @@ type MetricCardProps = {
   icon: ReactNode
   accentClass: string
   iconWrapClass: string
+  /** Classes Tailwind do valor principal (ex.: texto menor para valores longos em R$). */
+  valueClassName?: string
 }
 
-function MetricCard({ title, value, hint, icon, accentClass, iconWrapClass }: MetricCardProps) {
+function MetricCard({
+  title,
+  value,
+  hint,
+  icon,
+  accentClass,
+  iconWrapClass,
+  valueClassName = "text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50",
+}: MetricCardProps) {
   return (
     <div
       className={`
@@ -71,9 +81,7 @@ function MetricCard({ title, value, hint, icon, accentClass, iconWrapClass }: Me
           <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             {title}
           </p>
-          <p className="text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50">
-            {value}
-          </p>
+          <p className={valueClassName}>{value}</p>
           <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">{hint}</p>
         </div>
         <div
@@ -218,6 +226,7 @@ export default function DashboardPage() {
               icon={<Coins className="h-6 w-6" aria-hidden />}
               accentClass="border-violet-200/80 hover:border-violet-300 dark:border-violet-900/40"
               iconWrapClass="bg-gradient-to-br from-violet-500 to-purple-600 shadow-violet-500/30"
+              valueClassName="text-xl font-bold tabular-nums leading-snug tracking-tight text-zinc-900 sm:text-2xl dark:text-zinc-50"
             />
           </>
         )}

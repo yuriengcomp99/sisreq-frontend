@@ -76,7 +76,7 @@ export default function Topbar() {
 
   return (
     <header
-      className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-end gap-2 border-b border-gray-200 bg-white px-6 shadow-sm"
+      className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-end gap-2 border-b border-l-0 border-gray-200 bg-white px-6 shadow-[2px_2px_10px_rgba(0,0,0,0.06)]"
       role="banner"
     >
       <div className="flex items-center gap-1">
