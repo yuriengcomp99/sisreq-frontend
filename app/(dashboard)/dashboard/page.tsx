@@ -156,7 +156,7 @@ export default function DashboardPage() {
             </h1>
             <p className="text-sm leading-relaxed text-white/90 sm:text-base">
               Acompanhe requisições, saldo de itens de ata, licitações e crédito disponível em um
-              só lugar. Use o menu para registrar pregões, notas de crédito e novas requisições.
+              só lugar. Use o menu para cadastrar notas de crédito e novas requisições.
             </p>
           </div>
           <div
