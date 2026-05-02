@@ -1,4 +1,4 @@
-import { apiFetch } from "@/app/lib/api"
+import { apiFetch, apiFetchBinary, type ApiBinaryResult } from "@/app/lib/api"
 import type { ApiResponse, Item } from "@/app/services/pregoes-service"
 
 /** Campos da requisição na listagem GET /requisicoes (sem `detalhes`; com total). */
@@ -289,4 +289,18 @@ export async function updateRequisicao(id: string, payload: UpdateRequisicaoPayl
       body: JSON.stringify(payload),
     }
   )
+}
+
+/** `GET /requisicoes/emitir/pdf/:id` — in-memory PDF (`Content-Disposition: attachment`). */
+export async function emitirRequisicaoPdf(id: string): Promise<ApiBinaryResult> {
+  return apiFetchBinary(`/requisicoes/emitir/pdf/${encodeURIComponent(id)}`, {
+    method: "GET",
+  })
+}
+
+/** `GET /requisicoes/emitir/word/:id` — in-memory DOCX (`Content-Disposition: attachment`). */
+export async function emitirRequisicaoWord(id: string): Promise<ApiBinaryResult> {
+  return apiFetchBinary(`/requisicoes/emitir/word/${encodeURIComponent(id)}`, {
+    method: "GET",
+  })
 }
