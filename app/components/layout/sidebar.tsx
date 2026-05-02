@@ -66,7 +66,7 @@ export default function Sidebar() {
       <div className="mb-5 flex w-full shrink-0 justify-center px-1">
         <div className="relative h-28 w-full max-w-[14rem] shrink-0">
           <Image
-            src="/logo_normal.png"
+            src="/logo.png"
             alt="Logo"
             fill
             className="object-contain object-center"

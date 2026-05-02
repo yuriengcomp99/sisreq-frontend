@@ -57,7 +57,7 @@ export default function LoginPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-md flex-col gap-4">
       <div className="mb-2 flex items-center justify-center gap-4">
-        <Image src="/logo_bcms.png" alt="Logo BCMS" width={68} height={68} />
+        <Image src="/logo.png" alt="Logo BCMS" width={68} height={68} />
         <div className="flex flex-col leading-tight text-gray-text">
           <span className="text-[40px] font-semibold">SisReq</span>
           <span className="text-[20px] font-normal">Sistema de Requisições</span>
