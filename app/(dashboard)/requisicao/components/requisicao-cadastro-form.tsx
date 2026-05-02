@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Swal from "sweetalert2"
-import { FileDown, FileText, Save } from "lucide-react"
+import { FileDown, FileText, Loader2, Save } from "lucide-react"
 import { Input } from "@/app/components/ui/input"
 import { Select } from "@/app/components/ui/select"
 import { Button } from "@/app/components/ui/button"
@@ -17,6 +17,8 @@ import {
 } from "@/app/services/pregoes-service"
 import {
   createRequisicao,
+  emitirRequisicaoPdf,
+  emitirRequisicaoWord,
   mapLinhasToRequisicaoPayload,
   mapLinhasToUpdateItensPayload,
   partitionLinhasItensParaPayload,
@@ -111,6 +113,18 @@ function normalizeEmpenhoTipo(
 ): "ORDINARIO" | "ESTIMATIVO" | "GLOBAL" {
   if (v === "ESTIMATIVO" || v === "GLOBAL") return v
   return "ORDINARIO"
+}
+
+function triggerBlobDownload(blob: Blob, fallbackName: string) {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = fallbackName
+  a.rel = "noopener"
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 
 export type RequisicaoCadastroFormProps = {
@@ -228,6 +242,7 @@ export function RequisicaoCadastroForm({
   const [tipoLoading, setTipoLoading] = useState(!isEdit)
   const [notasCredito, setNotasCredito] = useState<NotaCredito[]>([])
   const [notasLoading, setNotasLoading] = useState(true)
+  const [exportBusy, setExportBusy] = useState<null | "pdf" | "word">(null)
 
   const paramsOk = Boolean(pregao && ugg)
 
@@ -561,6 +576,42 @@ export function RequisicaoCadastroForm({
   const titulo = isEdit ? "Editar requisição" : "Nova requisição"
   const submitLabel = isEdit ? "Salvar alterações" : "Salvar requisição"
 
+  async function handleVisualizarPdf() {
+    if (!requisicaoId) return
+    setExportBusy("pdf")
+    try {
+      const { blob, filename } = await emitirRequisicaoPdf(requisicaoId)
+      triggerBlobDownload(
+        blob,
+        filename ?? `requisicao-${requisicaoId}.pdf`
+      )
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Não foi possível gerar o PDF."
+      await Swal.fire({ icon: "error", title: message })
+    } finally {
+      setExportBusy(null)
+    }
+  }
+
+  async function handleVisualizarWord() {
+    if (!requisicaoId) return
+    setExportBusy("word")
+    try {
+      const { blob, filename } = await emitirRequisicaoWord(requisicaoId)
+      triggerBlobDownload(
+        blob,
+        filename ?? `requisicao-${requisicaoId}.docx`
+      )
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Não foi possível gerar o Word."
+      await Swal.fire({ icon: "error", title: message })
+    } finally {
+      setExportBusy(null)
+    }
+  }
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -586,17 +637,35 @@ export function RequisicaoCadastroForm({
           <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+              disabled={!requisicaoId || exportBusy !== null}
+              onClick={() => void handleVisualizarPdf()}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <FileText className="h-4 w-4 shrink-0 text-red-600" aria-hidden />
+              {exportBusy === "pdf" ? (
+                <Loader2
+                  className="h-4 w-4 shrink-0 animate-spin text-red-600"
+                  aria-hidden
+                />
+              ) : (
+                <FileText className="h-4 w-4 shrink-0 text-red-600" aria-hidden />
+              )}
               Visualizar PDF
             </button>
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+              disabled={!requisicaoId || exportBusy !== null}
+              onClick={() => void handleVisualizarWord()}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <FileDown className="h-4 w-4 shrink-0 text-custom-blue" aria-hidden />
-              Baixar Word
+              {exportBusy === "word" ? (
+                <Loader2
+                  className="h-4 w-4 shrink-0 animate-spin text-custom-blue"
+                  aria-hidden
+                />
+              ) : (
+                <FileDown className="h-4 w-4 shrink-0 text-custom-blue" aria-hidden />
+              )}
+              Visualizar Word
             </button>
           </div>
         ) : null}
