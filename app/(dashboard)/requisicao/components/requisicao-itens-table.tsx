@@ -9,7 +9,14 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { Calculator, ChevronLeft, ChevronRight, Coins, Package } from "lucide-react"
+import {
+  Calculator,
+  ChevronLeft,
+  ChevronRight,
+  Coins,
+  Package,
+} from "lucide-react"
+import { SubitemReferenciasBizuPanel } from "@/app/(dashboard)/requisicao/components/requisicao-ajuda-bizus"
 import type { Item } from "@/app/services/pregoes-service"
 import type {
   RequisicaoDetalheApi,
@@ -152,7 +159,17 @@ export function RequisicaoItensTable({
       },
       {
         id: "subitem",
-        header: "Subitem",
+        header: () => (
+          <span className="inline-flex items-center gap-1.5">
+            Subitem
+            <span
+              className="rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-700"
+              title="Use os PDFs de referência acima da tabela"
+            >
+              ref.
+            </span>
+          </span>
+        ),
         cell: ({ row }) => {
           const r = row.original
           return (
@@ -309,6 +326,7 @@ export function RequisicaoItensTable({
 
   return (
     <div className="flex flex-col gap-4">
+      <SubitemReferenciasBizuPanel />
       <div className="flex justify-end">
         <Input
           placeholder="Buscar itens"

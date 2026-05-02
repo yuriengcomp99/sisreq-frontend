@@ -9,6 +9,7 @@ import { FileDown, FileText, Loader2, Save } from "lucide-react"
 import { Input } from "@/app/components/ui/input"
 import { Select } from "@/app/components/ui/select"
 import { Button } from "@/app/components/ui/button"
+import { PncpPcaBizuButton } from "@/app/(dashboard)/requisicao/components/requisicao-ajuda-bizus"
 import { RequisicaoItensTable } from "@/app/(dashboard)/requisicao/components/requisicao-itens-table"
 import {
   getPregaoItens,
@@ -750,18 +751,28 @@ export function RequisicaoCadastroForm({
           </div>
         </div>
 
-        <Select label="Empenho (tipo)" {...register("empenho_tipo")}>
-          <option value="ORDINARIO">Ordinário</option>
-          <option value="ESTIMATIVO">Estimativo</option>
-          <option value="GLOBAL">Global</option>
-        </Select>
+        <div className="md:col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Select label="Empenho (tipo)" {...register("empenho_tipo")}>
+            <option value="ORDINARIO">Ordinário</option>
+            <option value="ESTIMATIVO">Estimativo</option>
+            <option value="GLOBAL">Global</option>
+          </Select>
 
-        <Select label="Contrato" {...register("contrato")}>
-          <option value="nao">Não</option>
-          <option value="sim">Sim</option>
-        </Select>
+          <Select label="Contrato" {...register("contrato")}>
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </Select>
+        </div>
 
-        <Input label="Classe / grupo PCA" {...register("classe_grupo_pca")} />
+        <div className="md:col-span-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+          <div className="min-w-0">
+            <Input label="Classe / grupo PCA" {...register("classe_grupo_pca")} />
+          </div>
+          <div className="flex min-w-0 flex-col gap-1">
+            <label className="text-sm text-gray-text">Consulta no PNCP</label>
+            <PncpPcaBizuButton />
+          </div>
+        </div>
 
         <div className="md:col-span-3">
           <Input
