@@ -3,8 +3,10 @@
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FiPlus } from "react-icons/fi"
+import Swal from "sweetalert2"
 import { RequisicaoTable } from "@/app/(dashboard)/requisicao/components/requisicao-table"
 import {
+  deleteRequisicao,
   getRequisicoes,
   type RequisicaoLista,
 } from "@/app/services/requisicao-service"
@@ -35,6 +37,35 @@ export default function RequisicaoPage() {
       cancelled = true
     }
   }, [loadList])
+
+  const handleDelete = useCallback(async (row: RequisicaoLista) => {
+    const label =
+      (row.numero_diex ?? "").trim() ||
+      (row.nup ?? "").trim() ||
+      row.id
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Excluir requisição?",
+      text: label,
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc2626",
+    })
+    if (!result.isConfirmed) return
+    try {
+      await deleteRequisicao(row.id)
+      setRequisicoes((prev) => prev.filter((r) => r.id !== row.id))
+      await Swal.fire({
+        icon: "success",
+        title: "Requisição excluída",
+      })
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Não foi possível excluir."
+      await Swal.fire({ icon: "error", title: message })
+    }
+  }, [])
 
   if (loading) {
     return (
@@ -106,7 +137,7 @@ export default function RequisicaoPage() {
         </Link>
       </div>
 
-      <RequisicaoTable data={requisicoes} />
+      <RequisicaoTable data={requisicoes} onDelete={handleDelete} />
     </div>
   )
 }

@@ -7,10 +7,14 @@ import { createRequisicaoTableColumns } from "./requisicao-table-config"
 
 interface RequisicaoTableProps {
   data: RequisicaoLista[]
+  onDelete: (row: RequisicaoLista) => void
 }
 
-export function RequisicaoTable({ data }: RequisicaoTableProps) {
-  const columns = useMemo(() => createRequisicaoTableColumns(), [])
+export function RequisicaoTable({ data, onDelete }: RequisicaoTableProps) {
+  const columns = useMemo(
+    () => createRequisicaoTableColumns({ onDelete }),
+    [onDelete]
+  )
 
   return (
     <DataTable

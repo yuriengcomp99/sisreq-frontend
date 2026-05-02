@@ -291,6 +291,15 @@ export async function updateRequisicao(id: string, payload: UpdateRequisicaoPayl
   )
 }
 
+export async function deleteRequisicao(id: string) {
+  return apiFetch<ApiResponse<unknown>>(
+    `/requisicoes/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    }
+  )
+}
+
 /** `GET /requisicoes/emitir/pdf/:id` — in-memory PDF (`Content-Disposition: attachment`). */
 export async function emitirRequisicaoPdf(id: string): Promise<ApiBinaryResult> {
   return apiFetchBinary(`/requisicoes/emitir/pdf/${encodeURIComponent(id)}`, {

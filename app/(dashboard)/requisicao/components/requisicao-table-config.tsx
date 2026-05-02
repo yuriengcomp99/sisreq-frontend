@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
-import { FiEdit2 } from "react-icons/fi"
+import { FiEdit2, FiTrash2 } from "react-icons/fi"
 import { Tooltip } from "@/app/components/ui/tooltip"
 import { formatCurrency, formatDate } from "@/app/lib/format"
 import type { RequisicaoLista } from "@/app/services/requisicao-service"
@@ -12,7 +12,13 @@ function cellText(value: string | null | undefined) {
   return t.length ? t : "—"
 }
 
-export function createRequisicaoTableColumns(): ColumnDef<RequisicaoLista>[] {
+export interface RequisicaoTableActions {
+  onDelete: (row: RequisicaoLista) => void
+}
+
+export function createRequisicaoTableColumns({
+  onDelete,
+}: RequisicaoTableActions): ColumnDef<RequisicaoLista>[] {
   return [
     {
       accessorKey: "numero_diex",
@@ -96,11 +102,12 @@ export function createRequisicaoTableColumns(): ColumnDef<RequisicaoLista>[] {
     {
       id: "acoes",
       header: "Ações",
-      size: 88,
+      size: 120,
       cell: ({ row }) => {
-        const id = row.original.id
+        const r = row.original
+        const id = r.id
         return (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-1">
             <Link
               href={`/requisicao/${id}/editar`}
               title="Editar requisição"
@@ -109,6 +116,15 @@ export function createRequisicaoTableColumns(): ColumnDef<RequisicaoLista>[] {
               <FiEdit2 size={18} aria-hidden />
               <span className="sr-only">Editar requisição</span>
             </Link>
+            <button
+              type="button"
+              title="Excluir requisição"
+              onClick={() => onDelete(r)}
+              className="cursor-pointer rounded p-2 text-red-600 transition hover:bg-red-50"
+            >
+              <FiTrash2 size={18} aria-hidden />
+              <span className="sr-only">Excluir requisição</span>
+            </button>
           </div>
         )
       },
