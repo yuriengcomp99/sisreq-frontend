@@ -75,8 +75,11 @@ type FormValues = z.infer<typeof formSchema>
 function notaCreditoLabel(n: NotaCredito) {
   const emitente = (n.emitente ?? "").trim()
   const nr = (n.numero ?? "").trim()
+  const nd = (n.nd ?? "").trim()
+  const pi = (n.pi ?? "").trim()
+  const uasg = (n.uasg_ug_emitente ?? "").trim()
   const obs = (n.observacao ?? n.descricao ?? "").trim()
-  const parts = [emitente, nr, obs].filter(Boolean)
+  const parts = [emitente, nr, nd, pi, uasg, obs].filter(Boolean)
   return parts.length ? parts.join(" - ") : n.id
 }
 

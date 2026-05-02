@@ -18,6 +18,11 @@ export function NotaCreditoFormSkeleton() {
   return (
     <div className="space-y-4" aria-hidden>
       <FieldSkeleton />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <FieldSkeleton />
+        <FieldSkeleton />
+        <FieldSkeleton />
+      </div>
       <FieldSkeleton />
       <FieldSkeleton />
       <FieldSkeleton tall />

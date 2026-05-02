@@ -4,6 +4,9 @@ import type { ApiResponse } from "@/app/services/pregoes-service"
 export interface NotaCredito {
   id: string
   numero?: string
+  nd?: string | null
+  pi?: string | null
+  uasg_ug_emitente?: string | null
   emitente?: string
   favorecido?: string
   observacao?: string | null
@@ -22,6 +25,9 @@ export interface NotaCredito {
 
 export interface CreateNotaCreditoPayload {
   numero: string
+  nd: string
+  pi: string
+  uasg_ug_emitente: string
   emitente: string
   favorecido: string
   observacao: string

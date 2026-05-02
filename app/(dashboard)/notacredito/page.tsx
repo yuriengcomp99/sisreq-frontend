@@ -84,17 +84,10 @@ export default function NotaCreditoPage() {
     }
   }, [])
 
-  const handleSaved = useCallback((nota: NotaCredito, isCreate: boolean) => {
-    if (isCreate) {
-      setNotas((prev) =>
-        [...prev, nota].sort((a, b) =>
-          (a.numero ?? a.id).localeCompare(b.numero ?? b.id, "pt-BR")
-        )
-      )
-    } else {
-      setNotas((prev) => prev.map((n) => (n.id === nota.id ? nota : n)))
-    }
-  }, [])
+  /** POST/PATCH costumam devolver o registro sem agregados da listagem (Consumido / Disponível). */
+  const handleSaved = useCallback(() => {
+    void loadList()
+  }, [loadList])
 
   if (loading) {
     return (

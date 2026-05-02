@@ -33,6 +33,9 @@ const requiredTrim = (label: string) =>
 
 const formSchema = z.object({
   numero: requiredTrim("Número"),
+  nd: z.string(),
+  pi: z.string(),
+  uasg_ug_emitente: z.string(),
   emitente: requiredTrim("Emitente"),
   favorecido: requiredTrim("Favorecido"),
   observacao: requiredTrim("Observação"),
@@ -57,6 +60,9 @@ type FormValues = z.infer<typeof formSchema>
 
 const emptyValues: FormValues = {
   numero: "",
+  nd: "",
+  pi: "",
+  uasg_ug_emitente: "",
   emitente: "",
   favorecido: "",
   observacao: "",
@@ -78,6 +84,9 @@ function buildPayload(values: FormValues): CreateNotaCreditoPayload {
   const valor = Number(values.valor.replace(",", "."))
   return {
     numero: values.numero.trim(),
+    nd: values.nd.trim(),
+    pi: values.pi.trim(),
+    uasg_ug_emitente: values.uasg_ug_emitente.trim(),
     emitente: values.emitente.trim(),
     favorecido: values.favorecido.trim(),
     observacao: values.observacao.trim(),
@@ -137,6 +146,9 @@ export function NotaCreditoFormModal({
         if (cancelled || !n) return
         reset({
           numero: (n.numero ?? "").trim(),
+          nd: (n.nd ?? "").trim(),
+          pi: (n.pi ?? "").trim(),
+          uasg_ug_emitente: (n.uasg_ug_emitente ?? "").trim(),
           emitente: (n.emitente ?? "").trim(),
           favorecido: (n.favorecido ?? "").trim(),
           observacao: (
@@ -199,7 +211,7 @@ export function NotaCreditoFormModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="max-w-xl">
+    <Modal open={open} onClose={onClose} panelClassName="max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-start justify-between gap-3 pb-2">
           <h2 className="pr-2 text-lg font-semibold text-zinc-800 dark:text-zinc-100">
@@ -235,6 +247,33 @@ export function NotaCreditoFormModal({
                 {errors.numero && (
                   <p className="mt-1 text-sm text-red-600">{errors.numero.message}</p>
                 )}
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <Input
+                    label="ND"
+                    placeholder="Nota de débito"
+                    autoComplete="off"
+                    {...register("nd")}
+                  />
+                </div>
+                <div>
+                  <Input
+                    label="PI"
+                    placeholder="PI"
+                    autoComplete="off"
+                    {...register("pi")}
+                  />
+                </div>
+                <div>
+                  <Input
+                    label="UASG / UG emitente"
+                    placeholder="Ex.: 160001"
+                    autoComplete="off"
+                    {...register("uasg_ug_emitente")}
+                  />
+                </div>
               </div>
 
               <div>
