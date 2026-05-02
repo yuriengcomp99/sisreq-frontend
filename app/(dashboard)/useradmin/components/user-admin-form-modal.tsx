@@ -19,25 +19,12 @@ import {
 } from "@/app/services/admin-users-service"
 import type { User } from "@/app/services/auth-service"
 import { getDesignations, type Designation } from "@/app/services/designation-service"
+import {
+  GRADUATION_OPTIONS,
+  normalizeGraduation,
+} from "@/app/lib/graduation-options"
 
 const MIN_FORM_SKELETON_MS = 240
-
-/** Mock de postos para o cadastro admin (alinhado ao uso interno). */
-const GRADUATION_OPTIONS = [
-  "Cel",
-  "TenCel",
-  "Maj",
-  "Cap",
-  "1ºTen",
-  "2ºTen",
-  "Asp",
-  "SubTen",
-  "1ºSgt",
-  "2ºSgt",
-  "3ºSgt",
-  "Cb",
-  "Sd",
-] as const
 
 const OM_FIXO = "BCMS" as const
 
@@ -148,11 +135,6 @@ function emptyValues(): FormValues {
 function normalizeRole(role: string | undefined): "ADMIN" | "USER" {
   const u = (role ?? "USER").toUpperCase()
   return u === "ADMIN" ? "ADMIN" : "USER"
-}
-
-function normalizeGraduation(raw: string | undefined): string {
-  const t = (raw ?? "").trim()
-  return (GRADUATION_OPTIONS as readonly string[]).includes(t) ? t : ""
 }
 
 function valuesFromUser(u: User): FormValues {

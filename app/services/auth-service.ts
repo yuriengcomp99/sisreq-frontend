@@ -83,19 +83,23 @@ export async function getProfile() {
   }
 }
 
-export async function updateUser(data: {
-  name?: string
+export type UpdateProfilePayload = {
+  first_name?: string
+  army_name?: string
+  graduation?: string
   email?: string
   password?: string
-}) {
-  return apiFetch("/users/me", {
+}
+
+export async function updateProfile(data: UpdateProfilePayload) {
+  return apiFetch<ApiResponse<User>>("/auth/me", {
     method: "PATCH",
     body: JSON.stringify(data),
   })
 }
 
 export async function deleteAccount() {
-  return apiFetch("/users/me", {
+  return apiFetch("/auth/me", {
     method: "DELETE",
   })
 }
