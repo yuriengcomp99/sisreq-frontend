@@ -4,7 +4,10 @@ import {
   setAccessToken,
 } from "@/app/lib/auth-session"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+/** Base da API sem barra final (evita `//auth/login` quando o env termina com `/`). */
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "")
+  .trim()
+  .replace(/\/+$/, "")
 const AUTH_REFRESH_PATH =
   process.env.NEXT_PUBLIC_AUTH_REFRESH_PATH ?? "/auth/refresh"
 
