@@ -249,7 +249,7 @@ docs/screenshots/            # prints deste README
 **Pré-requisitos:** Node.js 20+, API do SISREQ rodando.
 
 ```bash
-git clone <!-- [EDITAR] url-do-repositorio -->
+git clone <!-- url-do-repositorio -->
 cd sisreq-frontend
 npm install
 ```
