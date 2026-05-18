@@ -1,20 +1,17 @@
-﻿<div align="center">
+﻿<h1 align="center">SISREQ — Sistema de Requisições</h1>
 
-# SISREQ — Sistema de Requisições
+<p align="center"><strong>Frontend para gestão de requisições, pregões, empenho e notas de crédito</strong></p>
 
-**Frontend para gestão de requisições, pregões, empenho e notas de crédito**
+<p align="center">
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js" /></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind" /></a>
+</p>
 
 <!-- [EDITAR] Uma linha sobre você / contexto do projeto -->
+
 Interface web desenvolvida para o fluxo operacional de requisições institucionais, com autenticação, dashboard analítico, geração de documentos (PDF/Word) e painel administrativo.
-
-<br />
-
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-
-</motion>
 
 ---
 
@@ -32,6 +29,7 @@ Interface web desenvolvida para o fluxo operacional de requisições institucion
 - [Funcionalidades](#funcionalidades)
 - [Stack](#stack)
 - [Destaques técnicos](#destaques-técnicos)
+- [Estrutura do projeto](#estrutura-do-projeto)
 - [Como executar](#como-executar)
 - [Autor](#autor)
 
@@ -53,7 +51,9 @@ Este repositório concentra o **frontend**: rotas autenticadas, formulários val
 
 Tela de entrada com layout dividido (área institucional + formulário), validação de e-mail/senha e fluxo de sessão JWT.
 
-![Tela de login](./docs/screenshots/01-login.png)
+<p align="left">
+  <img src="./docs/screenshots/01-login.png" alt="Tela de login" width="900" />
+</p>
 
 ---
 
@@ -61,7 +61,9 @@ Tela de entrada com layout dividido (área institucional + formulário), valida�
 
 Visão inicial com métricas consolidadas: total de requisições, itens com saldo, licitações (pregão + UGG) e crédito disponível. Saudação contextual com data e hora.
 
-![Dashboard — métricas e boas-vindas](./docs/screenshots/02-dashboard.png)
+<p align="left">
+  <img src="./docs/screenshots/02-dashboard.png" alt="Dashboard — métricas e boas-vindas" width="900" />
+</p>
 
 ---
 
@@ -69,7 +71,9 @@ Visão inicial com métricas consolidadas: total de requisições, itens com sal
 
 Listagem em cards por pregão, com vigência, quantidade de itens, UGG e papel (Participante/Carona). Ações para **gerar requisição** (deep link com `pregao` e `ugg` na URL) e visualizar itens.
 
-![Lista de pregões](./docs/screenshots/05-modulos.png)
+<p align="left">
+  <img src="./docs/screenshots/05-modulos.png" alt="Lista de pregões" width="900" />
+</p>
 
 ---
 
@@ -79,27 +83,37 @@ Listagem em cards por pregão, com vigência, quantidade de itens, UGG e papel (
 
 Consulta das requisições cadastradas com busca por NUP, DIEX, tipo etc., paginação e ação para nova requisição.
 
-![Listagem de requisições](./docs/screenshots/03-requisicoes.png)
+<p align="left">
+  <img src="./docs/screenshots/03-requisicoes.png" alt="Listagem de requisições" width="900" />
+</p>
 
 #### Criação — itens do pregão
 
 Formulário de nova requisição com tabela de itens do pregão: subitem, unidade, quantidade editável, totais por linha e **total da requisição** recalculado. Integração com notificações no topbar.
 
-![Nova requisição — seleção de itens e totais](./docs/screenshots/04-requisicao-form.png)
+<p align="left">
+  <img src="./docs/screenshots/04-requisicao-form.png" alt="Nova requisição — seleção de itens e totais" width="900" />
+</p>
 
 #### Edição
 
 Tela de edição com cabeçalho do pregão/UGG, campos administrativos (DIEX, NUP, de/para, assunto, UG) e atalhos para exportar documentos.
 
-![Editar requisição](./docs/screenshots/03-requisicoes-editar.png)
+<p align="left">
+  <img src="./docs/screenshots/03-requisicoes-editar.png" alt="Editar requisição" width="900" />
+</p>
 
 #### Exportação PDF (oficial)
 
 Geração de PDF no padrão institucional (cabeçalho Exército Brasileiro, solicitação de empenho, NUP, fundamentação e referências normativas).
 
-![PDF — capa e texto da requisição](./docs/screenshots/03-requisicoes-PDF.png)
+<p align="left">
+  <img src="./docs/screenshots/03-requisicoes-PDF.png" alt="PDF — capa e texto da requisição" width="900" />
+</p>
 
-![PDF — tabelas de itens e totais](./docs/screenshots/03-requisicoes-PDF-02.png)
+<p align="left">
+  <img src="./docs/screenshots/03-requisicoes-PDF-02.png" alt="PDF — tabelas de itens e totais" width="900" />
+</p>
 
 <!-- [EDITAR] Mencione se também exporta Word, se quiser destacar -->
 
@@ -109,9 +123,13 @@ Geração de PDF no padrão institucional (cabeçalho Exército Brasileiro, soli
 
 CRUD com listagem (número, emitente, favorecido, valores consumido/disponível) e modal de cadastro com campos ND, PI, UASG e observação.
 
-![Listagem de notas de crédito](./docs/screenshots/07-nc.png)
+<p align="left">
+  <img src="./docs/screenshots/07-nc.png" alt="Listagem de notas de crédito" width="900" />
+</p>
 
-![Modal — nova nota de crédito](./docs/screenshots/07-nc-modal.png)
+<p align="left">
+  <img src="./docs/screenshots/07-nc-modal.png" alt="Modal — nova nota de crédito" width="900" />
+</p>
 
 ---
 
@@ -119,7 +137,9 @@ CRUD com listagem (número, emitente, favorecido, valores consumido/disponível)
 
 Sino no topbar com contador de não lidas e painel dropdown; mensagens sobre atualização de dados do sistema (ex.: capacidade de compras).
 
-![Painel de notificações](./docs/screenshots/08-notification.png)
+<p align="left">
+  <img src="./docs/screenshots/08-notification.png" alt="Painel de notificações" width="900" />
+</p>
 
 ---
 
@@ -131,19 +151,25 @@ Módulos visíveis apenas para perfil **ADMIN** na sidebar.
 
 Listagem com busca, cadastro/edição/exclusão e colunas de função, perfil e OM.
 
-![Cadastro de usuários](./docs/screenshots/06-admin-users.png)
+<p align="left">
+  <img src="./docs/screenshots/06-admin-users.png" alt="Cadastro de usuários" width="900" />
+</p>
 
 #### Setores (designações)
 
 Gestão de setores como Almoxarifado, Aprovisionador, Informática, SFPC etc.
 
-![Cadastro de setores](./docs/screenshots/06-admin-setores.png)
+<p align="left">
+  <img src="./docs/screenshots/06-admin-setores.png" alt="Cadastro de setores" width="900" />
+</p>
 
 #### Atualização de dados em lote
 
 Upload de planilhas Excel/CSV para sincronizar dados do sistema.
 
-![Atualizar dados — upload de arquivo](./docs/screenshots/06-admin.png)
+<p align="left">
+  <img src="./docs/screenshots/06-admin.png" alt="Atualizar dados — upload de arquivo" width="900" />
+</p>
 
 ---
 
@@ -196,7 +222,7 @@ Upload de planilhas Excel/CSV para sincronizar dados do sistema.
 
 ## Estrutura do projeto
 
-```
+```text
 app/
 ├── (auth)/login/
 ├── (dashboard)/
@@ -250,7 +276,7 @@ npm run lint
 
 <!-- [EDITAR] Seus dados -->
 
-**Seu Nome** — Desenvolvedor(a) Frontend Pleno  
+**Seu Nome** — Desenvolvedor(a) Frontend Pleno
 
 [LinkedIn](https://linkedin.com/in/seu-perfil) · [GitHub](https://github.com/seu-usuario) · seu.email@exemplo.com
 
@@ -259,8 +285,4 @@ npm run lint
 
 ---
 
-<div align="center">
-
-**SISREQ** · Interface focada em produtividade operacional e documentos oficiais
-
-</motion>
+*SISREQ · Interface focada em produtividade operacional e documentos oficiais*
