@@ -9,7 +9,6 @@
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind" /></a>
 </p>
 
-<!-- [EDITAR] Uma linha sobre você / contexto do projeto -->
 
 Interface web desenvolvida para o fluxo operacional de requisições institucionais, com autenticação, dashboard analítico, geração de documentos (PDF/Word) e painel administrativo.
 
@@ -41,8 +40,6 @@ Interface web desenvolvida para o fluxo operacional de requisições institucion
 O **SISREQ** (Sistema de Requisições) é o painel web usado no dia a dia para registrar e acompanhar **requisições de empenho**, consultar **pregões** e saldos de itens, vincular **notas de crédito** e, no perfil administrador, manter usuários, setores e carga de dados em lote.
 
 Este repositório concentra o **frontend**: rotas autenticadas, formulários validados, tabelas com busca/paginação, exportação de documentos oficiais e notificações em tempo real via WebSocket.
-
-<!-- [EDITAR] Contexto institucional, se quiser mencionar (ex.: BCMS, OM, etc.) -->
 
 ---
 
@@ -76,8 +73,6 @@ O SISREQ opera com dados de contexto **institucional e operacional**: identifica
 - Stack e qualidade visual do frontend.
 
 > **Para recrutadores e revisores técnicos:** o objetivo das capturas é demonstrar **competência em frontend e produto**, não reproduzir dados sensíveis. Em ambiente autorizado (homologação ou produção com credenciais), todas as informações são exibidas normalmente pelo sistema — sem tarjas.
-
-<!-- [EDITAR] Ajuste o tom ou cite política interna específica, se aplicável -->
 
 ---
 
@@ -149,8 +144,6 @@ Geração de PDF no padrão institucional (cabeçalho Exército Brasileiro, soli
   <img src="./docs/screenshots/03-requisicoes-PDF-02.png" alt="PDF — tabelas de itens e totais" width="900" />
 </p>
 
-<!-- [EDITAR] Mencione se também exporta Word, se quiser destacar -->
-
 ---
 
 ### Notas de crédito
@@ -215,9 +208,9 @@ Upload de planilhas Excel/CSV para sincronizar dados do sistema.
 | **Dashboard** | KPIs da API com skeleton de carregamento |
 | **Pregões** | Cards por licitação; link direto para criar requisição |
 | **Requisição** | Listar, criar (itens do pregão), editar, excluir; totais e validação de linhas |
-| **PDF / Word** | Emissão de documentos a partir da requisição salva <!-- [EDITAR] confirme Word se usar --> |
+| **PDF / Word** | Emissão de documentos a partir da requisição salva |
 | **Nota de crédito** | CRUD com modal e tabela paginada |
-| **Capacidade de empenho** | Consulta tabular <!-- [EDITAR] adicione print se fizer --> |
+| **Capacidade de empenho** | Consulta tabular |
 | **Notificações** | WebSocket + badge e dropdown no topbar |
 | **Admin** | Usuários, setores, upload em lote (Excel/CSV) |
 | **Perfil** | Dados do usuário logado via contexto global |
@@ -240,8 +233,6 @@ Upload de planilhas Excel/CSV para sincronizar dados do sistema.
 ---
 
 ## Destaques técnicos
-
-<!-- [EDITAR] Ajuste a lista ao que você mais quer destacar em entrevista -->
 
 - **App Router** com grupos `(auth)` e `(dashboard)`, sidebar com rotas ativas e menu admin condicional por role.
 - **Serviços por domínio** (`pregoes`, `requisicao`, `nota-credito`, `auth`, etc.) desacoplados da UI.
@@ -283,7 +274,7 @@ docs/screenshots/            # prints deste README
 **Pré-requisitos:** Node.js 20+, API do SISREQ rodando.
 
 ```bash
-git clone <!-- url-do-repositorio -->
+git clone https://github.com/yuriengcomp99/sisreq-frontend.git
 cd sisreq-frontend
 npm install
 ```
@@ -310,7 +301,6 @@ npm run lint
 
 - **Autor:** [Yuri Rodrigues Cavalcanti](https://github.com/yuriengcomp99/)
 - **LinkedIn:** [https://www.linkedin.com/in/yuri-rodrigues-895287307/](https://www.linkedin.com/in/yuri-rodrigues-895287307/)
-- **Frontend:** [Frontend](https://sisreq.vercel.app/login)
 
 ---
 
