@@ -274,14 +274,9 @@ npm run lint
 
 ## Autor
 
-<!-- [EDITAR] Seus dados -->
-
-**Seu Nome** — Desenvolvedor(a) Frontend Pleno
-
-[LinkedIn](https://linkedin.com/in/seu-perfil) · [GitHub](https://github.com/seu-usuario) · seu.email@exemplo.com
-
-<!-- [EDITAR] Parágrafo opcional sobre experiência / motivação -->
-<!-- Ex.: "Projeto desenvolvido no contexto de ..." -->
+- **Autor:** [Yuri Rodrigues Cavalcanti](https://github.com/yuriengcomp99/)
+- **LinkedIn:** [https://www.linkedin.com/in/yuri-rodrigues-895287307/](https://www.linkedin.com/in/yuri-rodrigues-895287307/)
+- **Frontend:** [Frontend](https://sisreq.vercel.app/login)
 
 ---
 
