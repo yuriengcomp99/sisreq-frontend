@@ -1,10 +1,11 @@
-<div align="center">
+﻿<div align="center">
 
 # SISREQ — Sistema de Requisições
 
-**Frontend web para gestão de requisições, pregões, empenho e notas de crédito**
+**Frontend para gestão de requisições, pregões, empenho e notas de crédito**
 
-Interface moderna em **Next.js** e **TypeScript**, integrada a API REST e notificações em tempo real via WebSocket.
+<!-- [EDITAR] Uma linha sobre você / contexto do projeto -->
+Interface web desenvolvida para o fluxo operacional de requisições institucionais, com autenticação, dashboard analítico, geração de documentos (PDF/Word) e painel administrativo.
 
 <br />
 
@@ -15,135 +16,181 @@ Interface moderna em **Next.js** e **TypeScript**, integrada a API REST e notifi
 
 </motion>
 
-</motion>
+---
 
-</div>
+## Índice
+
+- [Sobre o projeto](#sobre-o-projeto)
+- [Galeria](#galeria)
+  - [Autenticação](#autenticação)
+  - [Dashboard](#dashboard)
+  - [Pregões](#pregões)
+  - [Requisições](#requisições)
+  - [Notas de crédito](#notas-de-crédito)
+  - [Notificações](#notificações)
+  - [Administração](#administração)
+- [Funcionalidades](#funcionalidades)
+- [Stack](#stack)
+- [Destaques técnicos](#destaques-técnicos)
+- [Como executar](#como-executar)
+- [Autor](#autor)
 
 ---
 
 ## Sobre o projeto
 
-O **SISREQ** é o painel operacional do fluxo de requisições institucionais: usuários autenticados consultam indicadores no dashboard, gerenciam **pregões**, **capacidade de empenho**, **notas de crédito** e o ciclo completo de **requisições** (listagem, criação e edição). Perfis **admin** têm módulos extras de cadastro de usuários, setores e atualização em lote de dados.
+O **SISREQ** (Sistema de Requisições) é o painel web usado no dia a dia para registrar e acompanhar **requisições de empenho**, consultar **pregões** e saldos de itens, vincular **notas de crédito** e, no perfil administrador, manter usuários, setores e carga de dados em lote.
 
-O foco deste repositório é a **camada de apresentação**: componentes reutilizáveis, validação de formulários, tabelas com busca e paginação, feedback visual (skeletons, modais, alertas) e integração segura com o backend (token JWT + refresh automático de sessão).
+Este repositório concentra o **frontend**: rotas autenticadas, formulários validados, tabelas com busca/paginação, exportação de documentos oficiais e notificações em tempo real via WebSocket.
+
+<!-- [EDITAR] Contexto institucional, se quiser mencionar (ex.: BCMS, OM, etc.) -->
 
 ---
 
 ## Galeria
 
-> Substitua cada bloco abaixo pelo print correspondente.  
-> Salve as imagens em `docs/screenshots/` com os nomes indicados (mesmos paths usados no markdown).
+### Autenticação
 
-### 1. Login
+Tela de entrada com layout dividido (área institucional + formulário), validação de e-mail/senha e fluxo de sessão JWT.
 
-**Arquivo:** `docs/screenshots/01-login.png`  
-**Sugestão de captura:** tela de login com logo, fundo institucional e campos de e-mail/senha.
-
-<!-- 📸 INSERIR PRINT: login -->
-![Tela de login — substitua por docs/screenshots/01-login.png](./docs/screenshots/01-login.png)
+![Tela de login](./docs/screenshots/01-login.png)
 
 ---
 
-### 2. Dashboard
+### Dashboard
 
-**Arquivo:** `docs/screenshots/02-dashboard.png`  
-**Sugestão de captura:** cards de métricas (requisições, valores, itens) e saudação com data/hora.
+Visão inicial com métricas consolidadas: total de requisições, itens com saldo, licitações (pregão + UGG) e crédito disponível. Saudação contextual com data e hora.
 
-<!-- 📸 INSERIR PRINT: dashboard -->
-![Dashboard com métricas — substitua por docs/screenshots/02-dashboard.png](./docs/screenshots/02-dashboard.png)
+![Dashboard — métricas e boas-vindas](./docs/screenshots/02-dashboard.png)
 
 ---
 
-### 3. Requisições
+### Pregões
 
-**Arquivo:** `docs/screenshots/03-requisicoes.png`  
-**Sugestão de captura:** listagem com tabela, busca e ação de nova requisição.
+Listagem em cards por pregão, com vigência, quantidade de itens, UGG e papel (Participante/Carona). Ações para **gerar requisição** (deep link com `pregao` e `ugg` na URL) e visualizar itens.
 
-<!-- 📸 INSERIR PRINT: requisições -->
-![Módulo de requisições — substitua por docs/screenshots/03-requisicoes.png](./docs/screenshots/03-requisicoes.png)
+![Lista de pregões](./docs/screenshots/05-modulos.png)
 
 ---
 
-### 4. Criar / editar requisição
+### Requisições
 
-**Arquivo:** `docs/screenshots/04-requisicao-form.png`  
-**Sugestão de captura:** formulário de cadastro ou edição com itens da requisição.
+#### Listagem
 
-<!-- 📸 INSERIR PRINT: formulário de requisição -->
-![Formulário de requisição — substitua por docs/screenshots/04-requisicao-form.png](./docs/screenshots/04-requisicao-form.png)
+Consulta das requisições cadastradas com busca por NUP, DIEX, tipo etc., paginação e ação para nova requisição.
+
+![Listagem de requisições](./docs/screenshots/03-requisicoes.png)
+
+#### Criação — itens do pregão
+
+Formulário de nova requisição com tabela de itens do pregão: subitem, unidade, quantidade editável, totais por linha e **total da requisição** recalculado. Integração com notificações no topbar.
+
+![Nova requisição — seleção de itens e totais](./docs/screenshots/04-requisicao-form.png)
+
+#### Edição
+
+Tela de edição com cabeçalho do pregão/UGG, campos administrativos (DIEX, NUP, de/para, assunto, UG) e atalhos para exportar documentos.
+
+![Editar requisição](./docs/screenshots/03-requisicoes-editar.png)
+
+#### Exportação PDF (oficial)
+
+Geração de PDF no padrão institucional (cabeçalho Exército Brasileiro, solicitação de empenho, NUP, fundamentação e referências normativas).
+
+![PDF — capa e texto da requisição](./docs/screenshots/03-requisicoes-PDF.png)
+
+![PDF — tabelas de itens e totais](./docs/screenshots/03-requisicoes-PDF-02.png)
+
+<!-- [EDITAR] Mencione se também exporta Word, se quiser destacar -->
 
 ---
 
-### 5. Pregões, empenho ou nota de crédito
+### Notas de crédito
 
-**Arquivo:** `docs/screenshots/05-modulos.png`  
-**Sugestão de captura:** qualquer um dos módulos operacionais (pregões, capacidade de empenho ou nota de crédito).
+CRUD com listagem (número, emitente, favorecido, valores consumido/disponível) e modal de cadastro com campos ND, PI, UASG e observação.
 
-<!-- 📸 INSERIR PRINT: módulos operacionais -->
-![Módulos operacionais — substitua por docs/screenshots/05-modulos.png](./docs/screenshots/05-modulos.png)
+![Listagem de notas de crédito](./docs/screenshots/07-nc.png)
 
----
-
-### 6. Área administrativa (opcional)
-
-**Arquivo:** `docs/screenshots/06-admin.png`  
-**Sugestão de captura:** menu admin visível (usuários, setores ou atualização de dados).
-
-<!-- 📸 INSERIR PRINT: admin -->
-![Área administrativa — substitua por docs/screenshots/06-admin.png](./docs/screenshots/06-admin.png)
+![Modal — nova nota de crédito](./docs/screenshots/07-nc-modal.png)
 
 ---
 
-### 7. Notificações em tempo real (opcional)
+### Notificações
 
-**Arquivo:** `docs/screenshots/07-notificacoes.png`  
-**Sugestão de captura:** sino de notificações com contador ou painel aberto.
+Sino no topbar com contador de não lidas e painel dropdown; mensagens sobre atualização de dados do sistema (ex.: capacidade de compras).
 
-<!-- 📸 INSERIR PRINT: notificações -->
-![Notificações — substitua por docs/screenshots/07-notificacoes.png](./docs/screenshots/07-notificacoes.png)
+![Painel de notificações](./docs/screenshots/08-notification.png)
+
+---
+
+### Administração
+
+Módulos visíveis apenas para perfil **ADMIN** na sidebar.
+
+#### Usuários
+
+Listagem com busca, cadastro/edição/exclusão e colunas de função, perfil e OM.
+
+![Cadastro de usuários](./docs/screenshots/06-admin-users.png)
+
+#### Setores (designações)
+
+Gestão de setores como Almoxarifado, Aprovisionador, Informática, SFPC etc.
+
+![Cadastro de setores](./docs/screenshots/06-admin-setores.png)
+
+#### Atualização de dados em lote
+
+Upload de planilhas Excel/CSV para sincronizar dados do sistema.
+
+![Atualizar dados — upload de arquivo](./docs/screenshots/06-admin.png)
 
 ---
 
 ## Funcionalidades
 
-| Módulo | Descrição |
-|--------|-----------|
-| **Autenticação** | Login com validação (Zod + React Hook Form), sessão JWT e refresh transparente |
-| **Dashboard** | Resumo de métricas consumidas da API, com loading skeleton |
-| **Pregões** | Consulta e gestão de itens vinculados a pregões |
-| **Capacidade de empenho** | Visualização tabular da capacidade disponível |
-| **Nota de crédito** | CRUD com modais, tabela configurável e estados de carregamento |
-| **Requisição** | Listagem, exclusão com confirmação, criação e edição por rota dinâmica |
-| **Admin** | Cadastro de usuários e setores, atualização de dados (visível só para `ADMIN`) |
+| Área | O que faz |
+|------|-----------|
+| **Login** | Autenticação com Zod + React Hook Form; sessão JWT e refresh automático |
+| **Dashboard** | KPIs da API com skeleton de carregamento |
+| **Pregões** | Cards por licitação; link direto para criar requisição |
+| **Requisição** | Listar, criar (itens do pregão), editar, excluir; totais e validação de linhas |
+| **PDF / Word** | Emissão de documentos a partir da requisição salva <!-- [EDITAR] confirme Word se usar --> |
+| **Nota de crédito** | CRUD com modal e tabela paginada |
+| **Capacidade de empenho** | Consulta tabular <!-- [EDITAR] adicione print se fizer --> |
+| **Notificações** | WebSocket + badge e dropdown no topbar |
+| **Admin** | Usuários, setores, upload em lote (Excel/CSV) |
 | **Perfil** | Dados do usuário logado via contexto global |
-| **Notificações** | WebSocket gateway com contagem de não lidas no topbar |
 
 ---
 
-## Stack e ferramentas
+## Stack
 
 | Camada | Tecnologias |
 |--------|-------------|
 | Framework | Next.js 16 (App Router), React 19 |
 | Linguagem | TypeScript |
 | Estilo | Tailwind CSS 4 |
-| Formulários | React Hook Form, Zod, `@hookform/resolvers` |
-| Tabelas | TanStack Table (busca, paginação, colunas tipadas) |
+| Formulários | React Hook Form, Zod |
+| Tabelas | TanStack Table |
 | UX | Lucide React, React Icons, SweetAlert2 |
-| Integração | `fetch` centralizado em `app/lib/api.ts`, serviços por domínio |
+| API | `fetch` centralizado + camada `app/services/*` |
+| Tempo real | WebSocket (gateway de notificações) |
 
 ---
 
-## Destaques técnicos (nível pleno)
+## Destaques técnicos
 
-- **App Router** com rotas agrupadas `(auth)` e `(dashboard)`, layouts compartilhados e navegação ativa na sidebar.
-- **Camada de serviços** desacoplada da UI (`app/services/*`), facilitando manutenção e testes.
-- **Cliente HTTP** com renovação de token em fila (`refreshInFlight`), evitando race conditions em múltiplas requisições 401.
-- **Context API** (`UserProvider`) para perfil, loading e refresh após operações sensíveis.
-- **Componentes de UI** reutilizáveis: `DataTable`, `Modal`, `Input`, `Select`, `FileUpload`, `Button`.
-- **Tabelas declarativas** via arquivos `*-table-config.tsx`, separando colunas da renderização.
-- **WebSocket** para notificações com reconexão e parsing tipado de mensagens inbound.
-- **Acessibilidade e polish**: `aria-label` no menu, skeletons, feedback de erro no login e confirmações destrutivas.
+<!-- [EDITAR] Ajuste a lista ao que você mais quer destacar em entrevista -->
+
+- **App Router** com grupos `(auth)` e `(dashboard)`, sidebar com rotas ativas e menu admin condicional por role.
+- **Serviços por domínio** (`pregoes`, `requisicao`, `nota-credito`, `auth`, etc.) desacoplados da UI.
+- **Cliente HTTP** com fila de refresh de token (`refreshInFlight`) em respostas 401.
+- **Context API** (`UserProvider`) para perfil e recarregamento após operações.
+- **Componentes reutilizáveis**: `DataTable`, `Modal`, `Input`, `Select`, `FileUpload`.
+- **Configuração de colunas** em `*-table-config.tsx` separada da tabela.
+- **Deep linking** na criação de requisição: `/requisicao/criar?pregao=&ugg=`.
+- **Exportação** de blob PDF/Word com download no browser.
 
 ---
 
@@ -151,91 +198,69 @@ O foco deste repositório é a **camada de apresentação**: componentes reutili
 
 ```
 app/
-├── (auth)/              # Login e layout público
-├── (dashboard)/         # Módulos autenticados
+├── (auth)/login/
+├── (dashboard)/
 │   ├── dashboard/
-│   ├── requisicao/
 │   ├── pregoes/
 │   ├── capacidade/
 │   ├── notacredito/
+│   ├── requisicao/          # listagem, criar, [id]/editar
 │   ├── useradmin/
 │   ├── designation/
-│   └── ...
-├── components/
-│   ├── layout/          # Sidebar, topbar, notificações
-│   └── ui/              # Design system interno
-├── contexts/            # Estado global do usuário
-├── lib/                 # API, sessão, formatadores
-└── services/            # Integração com backend
-docs/
-└── screenshots/         # Prints para o README
-public/                  # Logo, assets estáticos
+│   └── update/
+├── components/layout/       # sidebar, topbar, notificações
+├── components/ui/
+├── contexts/
+├── lib/                     # api, sessão, format
+└── services/
+docs/screenshots/            # prints deste README
 ```
 
 ---
 
 ## Como executar
 
-**Pré-requisitos:** Node.js 20+, npm (ou pnpm/yarn) e API do SISREQ em execução.
+**Pré-requisitos:** Node.js 20+, API do SISREQ rodando.
 
 ```bash
-# Clonar e entrar no projeto
-git clone <url-do-repositorio>
+git clone <!-- [EDITAR] url-do-repositorio -->
 cd sisreq-frontend
-
-# Instalar dependências
 npm install
-
-# Configurar variáveis (crie .env.local na raiz)
-# NEXT_PUBLIC_API_URL=http://localhost:8080
-# NEXT_PUBLIC_AUTH_REFRESH_PATH=/auth/refresh
-# NEXT_PUBLIC_WS_GATEWAY_URL=ws://localhost:8081
-
-# Desenvolvimento
-npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000). O fluxo principal começa em `/login`; após autenticação, o usuário é direcionado ao dashboard.
+Crie `.env.local` na raiz:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+NEXT_PUBLIC_AUTH_REFRESH_PATH=/auth/refresh
+NEXT_PUBLIC_WS_GATEWAY_URL=ws://localhost:8081
+```
 
 ```bash
-npm run build   # Build de produção
-npm run start   # Servir build
-npm run lint    # ESLint
+npm run dev    # http://localhost:3000
+npm run build
+npm run lint
 ```
 
----
-
-## Variáveis de ambiente
-
-| Variável | Descrição |
-|----------|-----------|
-| `NEXT_PUBLIC_API_URL` | URL base da API REST (sem barra final) |
-| `NEXT_PUBLIC_AUTH_REFRESH_PATH` | Endpoint de refresh (padrão: `/auth/refresh`) |
-| `NEXT_PUBLIC_WS_GATEWAY_URL` | URL do gateway WebSocket para notificações |
-
----
-
-## Scripts úteis para o README
-
-Depois de salvar os prints em `docs/screenshots/`, confira se os nomes batem com a galeria acima. No GitHub, as imagens aparecem automaticamente nos blocos `![...](./docs/screenshots/...)`.
-
-Para remover os comentários `<!-- 📸 INSERIR PRINT -->` após inserir todas as imagens, busque por `INSERIR PRINT` no arquivo.
+> Se uma rota nova retornar 404 no dev, pare o servidor, apague a pasta `.next` e rode `npm run dev` de novo.
 
 ---
 
 ## Autor
 
-<!-- Preencha com seu nome, LinkedIn e e-mail profissional -->
+<!-- [EDITAR] Seus dados -->
 
 **Seu Nome** — Desenvolvedor(a) Frontend Pleno  
+
 [LinkedIn](https://linkedin.com/in/seu-perfil) · [GitHub](https://github.com/seu-usuario) · seu.email@exemplo.com
+
+<!-- [EDITAR] Parágrafo opcional sobre experiência / motivação -->
+<!-- Ex.: "Projeto desenvolvido no contexto de ..." -->
 
 ---
 
 <div align="center">
 
-Projeto desenvolvido como parte do ecossistema **SISREQ** · Interface focada em produtividade e clareza operacional
+**SISREQ** · Interface focada em produtividade operacional e documentos oficiais
 
 </motion>
-
-</div>
