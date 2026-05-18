@@ -19,6 +19,7 @@ Interface web desenvolvida para o fluxo operacional de requisições institucion
 
 - [Sobre o projeto](#sobre-o-projeto)
 - [Galeria](#galeria)
+  - [Privacidade e sigilo nas capturas](#privacidade-e-sigilo-nas-capturas)
   - [Autenticação](#autenticação)
   - [Dashboard](#dashboard)
   - [Pregões](#pregões)
@@ -46,6 +47,39 @@ Este repositório concentra o **frontend**: rotas autenticadas, formulários val
 ---
 
 ## Galeria
+
+### Privacidade e sigilo nas capturas
+
+As imagens desta seção são **capturas reais do sistema**, preparadas para exibição pública (portfólio, recrutadores, GitHub). Parte do conteúdo visual foi **deliberadamente ocultada ou substituída** — não é falha de layout nem bug de renderização.
+
+**Por que isso foi feito**
+
+O SISREQ opera com dados de contexto **institucional e operacional**: identificação de usuários, unidades gestoras (UG/UGG), valores financeiros, números de protocolo (NUP/DIEX), fornecedores e textos de documentos oficiais (PDF). Divulgar esses dados em um repositório aberto violaria:
+
+- **Sigilo operacional** e normas internas da organização;
+- **Proteção de dados pessoais** (nomes, postos, e-mails de militares e servidores);
+- **Confidencialidade** de processos de compras e empenho.
+
+**O que você pode ver nas imagens**
+
+| Tipo de ocultação | Exemplo nas capturas |
+|-------------------|----------------------|
+| Tarjas ou blocos sólidos (azul/cinza) | Campos de tabela, totais, assinaturas e trechos de PDF |
+| Placeholders textuais | *"Informação Sigilosa"*, *"Imagem aqui - Informação Sigilosa"* no login e no perfil |
+| Dados fictícios ou genéricos | Onde necessário para mostrar o fluxo sem expor dados reais |
+
+**O que permanece visível de propósito**
+
+- Estrutura da interface (sidebar, topbar, tabelas, modais, formulários);
+- Fluxos funcionais (criar requisição, editar, exportar PDF, admin, notificações);
+- Padrões de UX (validação, paginação, busca, badges, totais calculados);
+- Stack e qualidade visual do frontend.
+
+> **Para recrutadores e revisores técnicos:** o objetivo das capturas é demonstrar **competência em frontend e produto**, não reproduzir dados sensíveis. Em ambiente autorizado (homologação ou produção com credenciais), todas as informações são exibidas normalmente pelo sistema — sem tarjas.
+
+<!-- [EDITAR] Ajuste o tom ou cite política interna específica, se aplicável -->
+
+---
 
 ### Autenticação
 
